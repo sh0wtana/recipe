@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+/* daisyUI 5.6.18 — vendored, not from npm.
+   Upgrade by re-downloading daisyui.mjs and daisyui-theme.mjs from
+   https://github.com/saadeghi/daisyui/releases/latest and bumping this comment. */
+@plugin "./daisyui.mjs";
