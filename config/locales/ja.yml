@@ -1,0 +1,19 @@
+ja:
+  activerecord:
+    models:
+      user: ユーザー
+    attributes:
+      user:
+        email_address: メールアドレス
+        password: パスワード
+        password_confirmation: パスワード（確認）
+
+  sessions:
+    rate_limited: しばらく時間をおいてから再度お試しください
+    new:
+      title: ログイン
+      email_placeholder: メールアドレスを入力
+      password_placeholder: パスワードを入力
+      submit: ログイン
+    create:
+      invalid_credentials: メールアドレスまたはパスワードが正しくありません
