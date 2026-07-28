@@ -1,0 +1,35 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# == Schema Information
+#
+# Table name: steps
+#
+#  id         :integer          not null, primary key
+#  body       :text             not null
+#  position   :integer          not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  recipe_id  :integer          not null
+#
+# Indexes
+#
+#  index_steps_on_recipe_id  (recipe_id)
+#
+# Foreign Keys
+#
+#  recipe_id  (recipe_id => recipes.id)
+#
+karaage_marinate:
+  recipe: karaage
+  body: 鶏肉を一口大に切り、調味料に30分漬ける
+  position: 0
+
+karaage_fry:
+  recipe: karaage
+  body: 170℃の油で4分ほど揚げる
+  position: 1
+
+miso_soup_simmer:
+  recipe: miso_soup
+  body: だしを温めて具材を煮る
+  position: 0

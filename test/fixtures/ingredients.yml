@@ -1,0 +1,45 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# == Schema Information
+#
+# Table name: ingredients
+#
+#  id         :integer          not null, primary key
+#  amount     :string
+#  name       :string           not null
+#  position   :integer          not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  recipe_id  :integer          not null
+#
+# Indexes
+#
+#  index_ingredients_on_recipe_id  (recipe_id)
+#
+# Foreign Keys
+#
+#  recipe_id  (recipe_id => recipes.id)
+#
+karaage_chicken:
+  recipe: karaage
+  name: 鶏もも肉
+  amount: 300g
+  position: 0
+
+karaage_soy_sauce:
+  recipe: karaage
+  name: 醤油
+  amount: 大さじ2
+  position: 1
+
+# amount is deliberately omitted — it is optional
+karaage_ginger:
+  recipe: karaage
+  name: しょうが
+  position: 2
+
+miso_soup_tofu:
+  recipe: miso_soup
+  name: 豆腐
+  amount: 1/2丁
+  position: 0

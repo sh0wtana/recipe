@@ -1,0 +1,36 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# == Schema Information
+#
+# Table name: recipes
+#
+#  id          :integer          not null, primary key
+#  description :text
+#  servings    :string
+#  tips        :text
+#  title       :string           not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  user_id     :integer          not null
+#
+# Indexes
+#
+#  index_recipes_on_user_id  (user_id)
+#
+# Foreign Keys
+#
+#  user_id  (user_id => users.id)
+#
+karaage:
+  user: one
+  title: からあげ
+  description: 家族に好評な基本のからあげ
+  servings: 2〜3人分
+  tips: 揚げる前に室温に戻すと中まで火が通る
+
+miso_soup:
+  user: two
+  title: 味噌汁
+  description: 毎朝の定番
+  servings: 2人分
+  tips: 味噌は火を止めてから溶く
