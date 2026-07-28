@@ -2,11 +2,31 @@ ja:
   activerecord:
     models:
       user: ユーザー
+      recipe: レシピ
+      ingredient: 材料
+      step: 手順
     attributes:
       user:
         email_address: メールアドレス
         password: パスワード
         password_confirmation: パスワード（確認）
+      recipe:
+        user: ユーザー
+        title: タイトル
+        description: 説明
+        servings: 何人分
+        tips: コツ・ポイント
+        ingredients: 材料
+        steps: 手順
+      ingredient:
+        recipe: レシピ
+        name: 材料名
+        amount: 分量
+        position: 表示順
+      step:
+        recipe: レシピ
+        body: 手順
+        position: 表示順
 
   sessions:
     rate_limited: しばらく時間をおいてから再度お試しください
