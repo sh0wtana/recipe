@@ -152,4 +152,100 @@ class RecipeTest < ActiveSupport::TestCase
       end
     end
   end
+
+  test "tag_names defaults to the persisted tag names" do
+    assert_equal %w[和食 豚肉].sort, recipes(:karaage).tag_names.sort
+  end
+
+  test "applying tag names creates tags owned by the recipe's user" do
+    recipe = recipes(:miso_soup)
+
+    assert_difference "Tag.count", 1 do
+      recipe.update!(tag_names: [ "洋食" ])
+    end
+
+    assert_equal users(:two), recipe.tags.sole.user
+  end
+
+  test "applying another user's tag name creates the owner's own tag" do
+    recipe = recipes(:miso_soup)
+
+    assert_difference "Tag.count", 1 do
+      recipe.update!(tag_names: [ "豚肉" ])
+    end
+
+    tag = recipe.tags.sole
+
+    assert_equal users(:two), tag.user
+    refute_equal tags(:pork), tag
+  end
+
+  test "applying the same name twice reuses the existing tag" do
+    recipe = recipes(:miso_soup)
+    recipe.update!(tag_names: [ "洋食" ])
+
+    assert_no_difference "Tag.count" do
+      recipe.update!(tag_names: [ "洋食" ])
+    end
+  end
+
+  test "half-width and full-width forms of a name resolve to one tag" do
+    recipe = recipes(:miso_soup)
+
+    assert_difference "Tag.count", 1 do
+      recipe.update!(tag_names: [ "ｶﾚｰ" ])
+      recipe.update!(tag_names: [ "カレー" ])
+    end
+
+    assert_equal [ "カレー" ], recipe.reload.tags.map(&:name)
+  end
+
+  test "replacing tag names removes the join row but keeps the tag" do
+    recipe = recipes(:karaage)
+
+    assert_difference "RecipeTag.count", -1 do
+      assert_no_difference "Tag.count" do
+        recipe.update!(tag_names: [ "和食" ])
+      end
+    end
+
+    assert_equal [ "和食" ], recipe.reload.tags.map(&:name)
+    assert Tag.exists?(tags(:pork).id)
+  end
+
+  test "an empty tag_names array clears every tag" do
+    recipe = recipes(:karaage)
+
+    assert_difference "RecipeTag.count", -2 do
+      recipe.update!(tag_names: [])
+    end
+
+    assert_empty recipe.reload.tags
+  end
+
+  test "an update that does not mention tag_names leaves the tags alone" do
+    recipe = recipes(:karaage)
+
+    assert_no_difference "RecipeTag.count" do
+      recipe.update!(title: "からあげ（改）")
+    end
+  end
+
+  test "blank names are ignored and duplicates collapse" do
+    recipe = recipes(:miso_soup)
+
+    assert_difference "Tag.count", 1 do
+      recipe.update!(tag_names: [ "", "  ", "洋食", "洋食" ])
+    end
+
+    assert_equal [ "洋食" ], recipe.reload.tags.map(&:name)
+  end
+
+  test "tag_names reads back what was submitted when validation fails" do
+    recipe = recipes(:karaage)
+    recipe.attributes = { title: "", tag_names: [ "洋食" ] }
+
+    assert_predicate recipe, :invalid?
+    assert_equal [ "洋食" ], recipe.tag_names
+  end
 end

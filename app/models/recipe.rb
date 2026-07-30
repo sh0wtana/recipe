@@ -32,4 +32,29 @@ class Recipe < ApplicationRecord
   accepts_nested_attributes_for :steps,       allow_destroy: true, reject_if: :all_blank
 
   validates :title, presence: true
+
+  # Join rows need the recipe's id, so they wait until after the insert.
+  # nil means the form sent no tags; [] means the user cleared them all.
+  after_save :apply_tag_names, if: -> { @tag_names }
+
+  # Normalize before uniq so ｶﾚｰ and カレー collapse into one name.
+  def tag_names=(names)
+    @tag_names = Array(names)
+      .map { |name| name.unicode_normalize(:nfkc).strip }
+      .reject(&:blank?)
+      .uniq
+  end
+
+  # Prefer what was submitted, so a form re-rendered after a failed
+  # validation still shows what the user typed.
+  def tag_names
+    @tag_names || tags.map(&:name)
+  end
+
+  private
+    # Scoped to the recipe's own user so tags never cross accounts.
+    # Assignment replaces the join rows; the Tag itself is left alone.
+    def apply_tag_names
+      self.tags = @tag_names.map { |name| user.tags.find_or_create_by(name: name) }
+    end
 end
