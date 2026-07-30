@@ -1,0 +1,32 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# == Schema Information
+#
+# Table name: tags
+#
+#  id         :integer          not null, primary key
+#  name       :string           not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  user_id    :integer          not null
+#
+# Indexes
+#
+#  index_tags_on_user_id_and_name  (user_id,name) UNIQUE
+#
+# Foreign Keys
+#
+#  user_id  (user_id => users.id)
+#
+washoku:
+  user: one
+  name: 和食
+
+pork:
+  user: one
+  name: 豚肉
+
+# Same name as :washoku, owned by the other user — proves tags never cross accounts.
+two_washoku:
+  user: two
+  name: 和食
