@@ -140,4 +140,16 @@ class RecipeTest < ActiveSupport::TestCase
       recipe.update!(steps_attributes: [ { id: step.id, _destroy: "1" } ])
     end
   end
+
+  test "has its tags through recipe_tags" do
+    assert_equal %w[和食 豚肉].sort, recipes(:karaage).tags.map(&:name).sort
+  end
+
+  test "destroying a recipe destroys its join rows but not the tags" do
+    assert_difference "RecipeTag.count", -2 do
+      assert_no_difference "Tag.count" do
+        recipes(:karaage).destroy
+      end
+    end
+  end
 end
