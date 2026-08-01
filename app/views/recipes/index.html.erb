@@ -1,0 +1,16 @@
+<%# Placeholder. #10 adds the layout and nav, #11 the real list. %>
+<div>
+  <h1><%= t(".title") %></h1>
+
+  <%= link_to t(".new"), new_recipe_path %>
+
+  <% if @recipes.any? %>
+    <ul>
+      <% @recipes.each do |recipe| %>
+        <li><%= link_to recipe.title, recipe %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p><%= t(".empty") %></p>
+  <% end %>
+</div>

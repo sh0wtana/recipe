@@ -1,0 +1,28 @@
+<%# Placeholder. #11 owns this page. %>
+<div>
+  <h1><%= @recipe.title %></h1>
+
+  <p><%= @recipe.description %></p>
+  <p><%= Recipe.human_attribute_name(:servings) %>: <%= @recipe.servings %></p>
+
+  <h2><%= t(".ingredients") %></h2>
+  <ul>
+    <% @recipe.ingredients.each do |ingredient| %>
+      <li><%= ingredient.name %> <%= ingredient.amount %></li>
+    <% end %>
+  </ul>
+
+  <h2><%= t(".steps") %></h2>
+  <ol>
+    <% @recipe.steps.each do |step| %>
+      <li><%= step.body %></li>
+    <% end %>
+  </ol>
+
+  <h2><%= t(".tips") %></h2>
+  <p><%= @recipe.tips %></p>
+
+  <%= link_to t(".edit"), edit_recipe_path(@recipe) %>
+  <%= button_to t(".destroy"), @recipe, method: :delete %>
+  <%= link_to t(".back"), recipes_path %>
+</div>
