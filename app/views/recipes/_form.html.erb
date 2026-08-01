@@ -1,0 +1,59 @@
+<%# Placeholder. #12 replaces the static rows with the Stimulus editor,
+    #13 adds the tag chips. Deliberately no tag_names field yet: an empty
+    array clears every tag, so the sentinel arrives with the chip UI. %>
+<%= form_with model: recipe do |form| %>
+  <% if recipe.errors.any? %>
+    <div id="error_explanation">
+      <ul>
+        <% recipe.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div>
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div>
+    <%= form.label :servings %>
+    <%= form.text_field :servings %>
+  </div>
+
+  <fieldset>
+    <legend><%= Recipe.human_attribute_name(:ingredients) %></legend>
+    <%= form.fields_for :ingredients do |ingredient_form| %>
+      <div>
+        <%= ingredient_form.text_field :name %>
+        <%= ingredient_form.text_field :amount %>
+        <%= ingredient_form.hidden_field :position %>
+        <%= ingredient_form.hidden_field :_destroy %>
+      </div>
+    <% end %>
+  </fieldset>
+
+  <fieldset>
+    <legend><%= Recipe.human_attribute_name(:steps) %></legend>
+    <%= form.fields_for :steps do |step_form| %>
+      <div>
+        <%= step_form.text_area :body %>
+        <%= step_form.hidden_field :position %>
+        <%= step_form.hidden_field :_destroy %>
+      </div>
+    <% end %>
+  </fieldset>
+
+  <div>
+    <%= form.label :tips %>
+    <%= form.text_area :tips %>
+  </div>
+
+  <%= form.submit %>
+<% end %>
