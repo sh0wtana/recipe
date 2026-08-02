@@ -1,28 +1,43 @@
-<%# Placeholder. #11 owns this page. %>
 <div>
   <h1><%= @recipe.title %></h1>
 
-  <p><%= @recipe.description %></p>
-  <p><%= Recipe.human_attribute_name(:servings) %>: <%= @recipe.servings %></p>
+  <% if @recipe.tags.any? %>
+    <ul id="tags">
+      <% @recipe.tags.each do |tag| %>
+        <li><%= link_to tag.name, recipes_path(tag: tag.name) %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <% if @recipe.description.present? %>
+    <p id="description"><%= @recipe.description %></p>
+  <% end %>
+
+  <% if @recipe.servings.present? %>
+    <p id="servings"><%= Recipe.human_attribute_name(:servings) %>: <%= @recipe.servings %></p>
+  <% end %>
 
   <h2><%= t(".ingredients") %></h2>
-  <ul>
+  <ul id="ingredients">
     <% @recipe.ingredients.each do |ingredient| %>
       <li><%= ingredient.name %> <%= ingredient.amount %></li>
     <% end %>
   </ul>
 
   <h2><%= t(".steps") %></h2>
-  <ol>
+  <ol id="steps">
     <% @recipe.steps.each do |step| %>
       <li><%= step.body %></li>
     <% end %>
   </ol>
 
-  <h2><%= t(".tips") %></h2>
-  <p><%= @recipe.tips %></p>
+  <% if @recipe.tips.present? %>
+    <h2><%= t(".tips") %></h2>
+    <p id="tips"><%= @recipe.tips %></p>
+  <% end %>
 
   <%= link_to t(".edit"), edit_recipe_path(@recipe) %>
-  <%= button_to t(".destroy"), @recipe, method: :delete %>
+  <%= button_to t(".destroy"), @recipe, method: :delete,
+        form: { data: { turbo_confirm: t(".confirm_destroy", title: @recipe.title) } } %>
   <%= link_to t(".back"), recipes_path %>
 </div>
