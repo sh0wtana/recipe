@@ -1,13 +1,24 @@
-<%# Placeholder. #10 adds the layout and nav, #11 the real list. %>
 <div>
   <h1><%= t(".title") %></h1>
 
-  <%= link_to t(".new"), new_recipe_path %>
-
   <% if @recipes.any? %>
-    <ul>
+    <ul id="recipes">
       <% @recipes.each do |recipe| %>
-        <li><%= link_to recipe.title, recipe %></li>
+        <li>
+          <%= link_to recipe.title, recipe %>
+
+          <% if recipe.tags.any? %>
+            <ul>
+              <% recipe.tags.each do |tag| %>
+                <li><%= link_to tag.name, recipes_path(tag: tag.name) %></li>
+              <% end %>
+            </ul>
+          <% end %>
+
+          <time datetime="<%= recipe.created_at.iso8601 %>">
+            <%= l(recipe.created_at, format: :long) %>
+          </time>
+        </li>
       <% end %>
     </ul>
   <% else %>

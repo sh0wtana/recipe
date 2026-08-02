@@ -46,7 +46,6 @@ ja:
   recipes:
     index:
       title: レシピ一覧
-      new: 新規レシピ
       empty: まだレシピがありません
     show:
       ingredients: 材料
@@ -54,6 +53,7 @@ ja:
       tips: コツ・ポイント
       edit: 編集
       destroy: 削除
+      confirm_destroy: 「%{title}」を削除しますか？
       back: 一覧へ戻る
     new:
       title: 新しいレシピ
