@@ -28,6 +28,11 @@ ja:
         body: 手順
         position: 表示順
 
+  shared:
+    header:
+      new_recipe: 新規レシピ
+      sign_out: ログアウト
+
   sessions:
     rate_limited: しばらく時間をおいてから再度お試しください
     new:

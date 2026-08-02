@@ -1,0 +1,12 @@
+<header class="container mx-auto px-5 py-4 flex items-center justify-between">
+  <%= link_to "Recipe", root_path, class: "font-bold text-xl" %>
+
+  <%# The name renders for everyone, but the sign-in page is reachable while
+      signed out — offering sign out there would be nonsense. %>
+  <% if authenticated? %>
+    <div class="flex items-center gap-4">
+      <%= link_to t(".new_recipe"), new_recipe_path %>
+      <%= button_to t(".sign_out"), session_path, method: :delete %>
+    </div>
+  <% end %>
+</header>
