@@ -61,7 +61,9 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   end
 
   private
+    # Flash renders in the layout as of #10, so this can no longer match the
+    # view wrapper that used to happen to enclose it.
     def assert_notice(text)
-      assert_select "div", /#{text}/
+      assert_select "#notice, #alert", /#{text}/
     end
 end
