@@ -115,6 +115,24 @@ class RecipeTest < ActiveSupport::TestCase
     end
   end
 
+  # renumber() writes position on every row, so a row the user never typed in
+  # still arrives with one.
+  test "rejects a blank ingredient row that carries a position" do
+    recipe = recipes(:karaage)
+
+    assert_no_difference "Ingredient.count" do
+      recipe.update!(ingredients_attributes: [ { name: "", amount: "", position: "3" } ])
+    end
+  end
+
+  test "rejects a blank step row that carries a position" do
+    recipe = recipes(:karaage)
+
+    assert_no_difference "Step.count" do
+      recipe.update!(steps_attributes: [ { body: "", position: "2" } ])
+    end
+  end
+
   test "a partially filled ingredient row is still validated" do
     recipe = recipes(:karaage)
 
