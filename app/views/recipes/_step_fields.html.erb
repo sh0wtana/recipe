@@ -1,0 +1,7 @@
+<%# No Stimulus target on the row: a row is whatever is a child of the list. %>
+<div>
+  <%= form.text_area :body %>
+  <%= form.hidden_field :position, data: { position: "" } %>
+  <%= form.hidden_field :_destroy, data: { destroy: "" } %>
+  <button type="button" data-action="nested-rows#remove"><%= t(".remove") %></button>
+</div>

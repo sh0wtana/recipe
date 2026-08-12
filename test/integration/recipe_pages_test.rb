@@ -61,4 +61,23 @@ class RecipePagesTest < ActionDispatch::IntegrationTest
     assert_select "#servings", false
     assert_select "#tips", false
   end
+
+  # The Stimulus controller finds these by attribute, one of each per row.
+  test "edit renders the row hooks and a remove button for each ingredient" do
+    get edit_recipe_path(@recipe)
+
+    assert_select "#ingredient-fields input[type=hidden][data-position]", count: 3
+    assert_select "#ingredient-fields input[type=hidden][data-destroy]", count: 3
+    assert_select "#ingredient-fields button[type=button]", count: 3,
+      text: I18n.t("recipes.ingredient_fields.remove")
+  end
+
+  test "edit renders the row hooks and a remove button for each step" do
+    get edit_recipe_path(@recipe)
+
+    assert_select "#step-fields input[type=hidden][data-position]", count: 2
+    assert_select "#step-fields input[type=hidden][data-destroy]", count: 2
+    assert_select "#step-fields button[type=button]", count: 2,
+      text: I18n.t("recipes.step_fields.remove")
+  end
 end

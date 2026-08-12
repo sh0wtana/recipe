@@ -27,27 +27,24 @@
     <%= form.text_field :servings %>
   </div>
 
-  <fieldset>
+  <fieldset id="ingredient-fields">
     <legend><%= Recipe.human_attribute_name(:ingredients) %></legend>
-    <%= form.fields_for :ingredients do |ingredient_form| %>
-      <div>
-        <%= ingredient_form.text_field :name %>
-        <%= ingredient_form.text_field :amount %>
-        <%= ingredient_form.hidden_field :position %>
-        <%= ingredient_form.hidden_field :_destroy %>
-      </div>
-    <% end %>
+
+    <div>
+      <%= form.fields_for :ingredients do |ingredient_form| %>
+        <%= render "ingredient_fields", form: ingredient_form %>
+      <% end %>
+    </div>
   </fieldset>
 
-  <fieldset>
+  <fieldset id="step-fields">
     <legend><%= Recipe.human_attribute_name(:steps) %></legend>
-    <%= form.fields_for :steps do |step_form| %>
-      <div>
-        <%= step_form.text_area :body %>
-        <%= step_form.hidden_field :position %>
-        <%= step_form.hidden_field :_destroy %>
-      </div>
-    <% end %>
+
+    <div>
+      <%= form.fields_for :steps do |step_form| %>
+        <%= render "step_fields", form: step_form %>
+      <% end %>
+    </div>
   </fieldset>
 
   <div>
