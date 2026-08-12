@@ -61,6 +61,10 @@ ja:
     edit:
       title: レシピを編集
       back: レシピへ戻る
+    ingredient_fields:
+      remove: 材料を削除
+    step_fields:
+      remove: 手順を削除
     create:
       created: レシピを作成しました
     update:
