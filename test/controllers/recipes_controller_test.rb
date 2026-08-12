@@ -141,6 +141,49 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_content
   end
 
+  # The shape the editor submits after a delete: the removed row carries
+  # _destroy, the survivors carry positions renumbered by DOM order, and a
+  # row added in the browser arrives under a timestamp index.
+  test "update destroys a row marked _destroy and stores the renumbered positions" do
+    chicken, soy_sauce, ginger = @recipe.ingredients.to_a
+
+    patch recipe_path(@recipe), params: { recipe: {
+      title: @recipe.title,
+      ingredients_attributes: {
+        "0" => { id: chicken.id, name: chicken.name, amount: chicken.amount, position: 0 },
+        "1" => { id: soy_sauce.id, _destroy: "1" },
+        "2" => { id: ginger.id, name: ginger.name, amount: ginger.amount, position: 1 },
+        "1754821093117" => { name: "にんにく", amount: "1片", position: 2 } } } }
+
+    assert_redirected_to recipe_path(@recipe)
+    assert_not Ingredient.exists?(soy_sauce.id)
+    assert_equal [ "鶏もも肉", "しょうが", "にんにく" ], @recipe.reload.ingredients.map(&:name)
+    assert_equal [ 0, 1, 2 ], @recipe.ingredients.map(&:position)
+  end
+
+  # Clicking add and then not typing anything must not fail the save.
+  test "update ignores a row the user added and left empty" do
+    patch recipe_path(@recipe), params: { recipe: {
+      title: @recipe.title,
+      ingredients_attributes: { "1754821093117" => { name: "", amount: "", position: 3 } } } }
+
+    assert_redirected_to recipe_path(@recipe)
+    assert_equal 3, @recipe.reload.ingredients.count
+  end
+
+  # remove() has no branch guarding the last row, and nothing validates that a
+  # recipe has any ingredients. Deleting them all has to be a legal save.
+  test "update accepts a recipe whose rows were all deleted" do
+    patch recipe_path(@recipe), params: { recipe: {
+      title: @recipe.title,
+      ingredients_attributes: @recipe.ingredients.each_with_index.to_h { |ingredient, index|
+        [ index.to_s, { id: ingredient.id, _destroy: "1" } ]
+      } } }
+
+    assert_redirected_to recipe_path(@recipe)
+    assert_empty @recipe.reload.ingredients
+  end
+
   test "destroy" do
     assert_difference "Recipe.count", -1 do
       delete recipe_path(@recipe)
