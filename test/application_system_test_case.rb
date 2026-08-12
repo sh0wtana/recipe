@@ -17,5 +17,12 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     fill_in I18n.t("sessions.new.email_placeholder"), with: user.email_address
     fill_in I18n.t("sessions.new.password_placeholder"), with: password
     click_on I18n.t("sessions.new.submit")
+
+    # The login form submits through Turbo, so click_on returns as soon as the
+    # click event dispatches, before the POST resolves. A caller that follows
+    # sign_in_as with a hard `visit` (a real navigation, not a waiting Capybara
+    # query) can otherwise fire it before the browser has the session cookie
+    # and land back on the login page.
+    assert_current_path root_path
   end
 end

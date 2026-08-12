@@ -63,21 +63,29 @@ class RecipePagesTest < ActionDispatch::IntegrationTest
   end
 
   # The Stimulus controller finds these by attribute, one of each per row.
+  #
+  # Scoped to the list, not just the fieldset: the fieldset also holds a
+  # <template> for cloning new rows, built from this same partial so the
+  # markup is never duplicated. A real browser never renders <template>
+  # content, but assert_select's parser doesn't know that, so an unscoped
+  # selector would double-count the template's own copy of these fields.
   test "edit renders the row hooks and a remove button for each ingredient" do
     get edit_recipe_path(@recipe)
 
-    assert_select "#ingredient-fields input[type=hidden][data-position]", count: 3
-    assert_select "#ingredient-fields input[type=hidden][data-destroy]", count: 3
-    assert_select "#ingredient-fields button[type=button]", count: 3,
+    list = "#ingredient-fields [data-nested-rows-target=list]"
+    assert_select "#{list} input[type=hidden][data-position]", count: 3
+    assert_select "#{list} input[type=hidden][data-destroy]", count: 3
+    assert_select "#{list} button[type=button]", count: 3,
       text: I18n.t("recipes.ingredient_fields.remove")
   end
 
   test "edit renders the row hooks and a remove button for each step" do
     get edit_recipe_path(@recipe)
 
-    assert_select "#step-fields input[type=hidden][data-position]", count: 2
-    assert_select "#step-fields input[type=hidden][data-destroy]", count: 2
-    assert_select "#step-fields button[type=button]", count: 2,
+    list = "#step-fields [data-nested-rows-target=list]"
+    assert_select "#{list} input[type=hidden][data-position]", count: 2
+    assert_select "#{list} input[type=hidden][data-destroy]", count: 2
+    assert_select "#{list} button[type=button]", count: 2,
       text: I18n.t("recipes.step_fields.remove")
   end
 end
