@@ -28,8 +28,14 @@ class Recipe < ApplicationRecord
   has_many :recipe_tags, dependent: :destroy
   has_many :tags, through: :recipe_tags
 
-  accepts_nested_attributes_for :ingredients, allow_destroy: true, reject_if: :all_blank
-  accepts_nested_attributes_for :steps,       allow_destroy: true, reject_if: :all_blank
+  # :all_blank, except that position does not count. JavaScript writes it on
+  # every row, so an untouched row would read as filled in and then fail its
+  # presence validation. _destroy needs no handling: call_reject_if skips the
+  # predicate entirely for a row already marked for destruction.
+  BLANK_ROW = ->(attrs) { attrs.all? { |key, value| key.in?(%w[position _destroy]) || value.blank? } }
+
+  accepts_nested_attributes_for :ingredients, allow_destroy: true, reject_if: BLANK_ROW
+  accepts_nested_attributes_for :steps,       allow_destroy: true, reject_if: BLANK_ROW
 
   validates :title, presence: true
 
