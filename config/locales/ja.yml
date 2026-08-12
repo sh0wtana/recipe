@@ -61,6 +61,9 @@ ja:
     edit:
       title: レシピを編集
       back: レシピへ戻る
+    form:
+      add_ingredient: 材料を追加
+      add_step: 手順を追加
     ingredient_fields:
       remove: 材料を削除
     step_fields:

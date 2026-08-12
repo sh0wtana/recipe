@@ -1,5 +1,4 @@
-<%# Placeholder. #12 replaces the static rows with the Stimulus editor,
-    #13 adds the tag chips. Deliberately no tag_names field yet: an empty
+<%# #13 adds the tag chips. Deliberately no tag_names field yet: an empty
     array clears every tag, so the sentinel arrives with the chip UI. %>
 <%= form_with model: recipe do |form| %>
   <% if recipe.errors.any? %>
@@ -27,24 +26,42 @@
     <%= form.text_field :servings %>
   </div>
 
-  <fieldset id="ingredient-fields">
+  <fieldset id="ingredient-fields" data-controller="nested-rows">
     <legend><%= Recipe.human_attribute_name(:ingredients) %></legend>
 
-    <div>
+    <div data-nested-rows-target="list">
       <%= form.fields_for :ingredients do |ingredient_form| %>
         <%= render "ingredient_fields", form: ingredient_form %>
       <% end %>
     </div>
+
+    <%# Inert: a hidden div would submit its fields on every save. %>
+    <template data-nested-rows-target="template">
+      <%= form.fields_for :ingredients, Ingredient.new, child_index: "NEW_RECORD" do |ingredient_form| %>
+        <%= render "ingredient_fields", form: ingredient_form %>
+      <% end %>
+    </template>
+
+    <button type="button" data-action="nested-rows#add"><%= t(".add_ingredient") %></button>
   </fieldset>
 
-  <fieldset id="step-fields">
+  <fieldset id="step-fields" data-controller="nested-rows">
     <legend><%= Recipe.human_attribute_name(:steps) %></legend>
 
-    <div>
+    <div data-nested-rows-target="list">
       <%= form.fields_for :steps do |step_form| %>
         <%= render "step_fields", form: step_form %>
       <% end %>
     </div>
+
+    <%# Inert: a hidden div would submit its fields on every save. %>
+    <template data-nested-rows-target="template">
+      <%= form.fields_for :steps, Step.new, child_index: "NEW_RECORD" do |step_form| %>
+        <%= render "step_fields", form: step_form %>
+      <% end %>
+    </template>
+
+    <button type="button" data-action="nested-rows#add"><%= t(".add_step") %></button>
   </fieldset>
 
   <div>
