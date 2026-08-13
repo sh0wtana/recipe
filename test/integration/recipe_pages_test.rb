@@ -69,6 +69,7 @@ class RecipePagesTest < ActionDispatch::IntegrationTest
     get edit_recipe_path(@recipe)
 
     list = "#ingredient-fields [data-nested-rows-target=list]"
+    assert_select "#{list} [data-nested-rows-target=row]", count: 3
     assert_select "#{list} input[type=hidden][data-position]", count: 3
     assert_select "#{list} input[type=hidden][data-destroy]", count: 3
     assert_select "#{list} button[type=button]", count: 3,
@@ -79,6 +80,7 @@ class RecipePagesTest < ActionDispatch::IntegrationTest
     get edit_recipe_path(@recipe)
 
     list = "#step-fields [data-nested-rows-target=list]"
+    assert_select "#{list} [data-nested-rows-target=row]", count: 2
     assert_select "#{list} input[type=hidden][data-position]", count: 2
     assert_select "#{list} input[type=hidden][data-destroy]", count: 2
     assert_select "#{list} button[type=button]", count: 2,
