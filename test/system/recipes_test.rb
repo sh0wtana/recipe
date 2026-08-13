@@ -50,8 +50,25 @@ class RecipesTest < ApplicationSystemTestCase
     assert_equal [ 0, 1, 2 ], @recipe.reload.ingredients.map(&:position)
   end
 
+  # Rails marks a row for destruction while assigning attributes, before the
+  # save is attempted, so a failed save re-renders it — still flagged. Only a
+  # browser can show whether connect() actually hides it; the params the
+  # server received are already covered at the integration level.
+  test "a deleted row stays hidden after a failed save" do
+    visit edit_recipe_path(@recipe)
+
+    ingredient_row_named("醤油").click_on I18n.t("recipes.ingredient_fields.remove")
+    assert_selector ingredient_row, count: 2
+
+    fill_in Recipe.human_attribute_name(:title), with: ""
+    click_on I18n.t("helpers.submit.update")
+
+    assert_selector "h1", text: I18n.t("recipes.edit.title")
+    assert_selector ingredient_row, count: 2
+  end
+
   private
-    # A row is a child of the list — the controller defines it the same way.
+    # A row carries the row target — the controller defines it the same way.
     def ingredient_row = "#ingredient-fields [data-nested-rows-target='list'] > div"
     def step_row       = "#step-fields [data-nested-rows-target='list'] > div"
 

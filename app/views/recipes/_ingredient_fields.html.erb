@@ -1,5 +1,4 @@
-<%# No Stimulus target on the row: a row is whatever is a child of the list. %>
-<div>
+<div data-nested-rows-target="row">
   <%= form.text_field :name %>
   <%= form.text_field :amount %>
   <%= form.hidden_field :position, data: { position: "" } %>

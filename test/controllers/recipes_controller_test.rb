@@ -141,6 +141,27 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_content
   end
 
+  # Rails marks a nested row for destruction during attribute assignment,
+  # before the save is attempted — a failed save doesn't undo that. The
+  # re-rendered edit form still yields the row, still flagged, so the editor
+  # can tell it apart from a survivor instead of showing it as restored.
+  test "update with a blank title re-renders a row still flagged for destruction" do
+    chicken, soy_sauce, ginger = @recipe.ingredients.to_a
+
+    assert_no_changes -> { @recipe.reload.title } do
+      patch recipe_path(@recipe), params: { recipe: {
+        title: "",
+        ingredients_attributes: {
+          "0" => { id: chicken.id, name: chicken.name, amount: chicken.amount, position: 0 },
+          "1" => { id: soy_sauce.id, _destroy: "1" },
+          "2" => { id: ginger.id, name: ginger.name, amount: ginger.amount, position: 1 } } } }
+    end
+
+    assert_response :unprocessable_content
+    assert_select "#ingredient-fields input[name='recipe[ingredients_attributes][1][id]'][value=?]", soy_sauce.id.to_s
+    assert_select "#ingredient-fields input[name='recipe[ingredients_attributes][1][_destroy]'][value=?]", "true"
+  end
+
   # The shape the editor submits after a delete: the removed row carries
   # _destroy, the survivors carry positions renumbered by DOM order, and a
   # row added in the browser arrives under a timestamp index.
