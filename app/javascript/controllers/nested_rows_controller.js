@@ -7,15 +7,18 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["list", "row", "template"]
 
-  // A row re-rendered after a failed save can already carry _destroy="true" —
-  // Rails marks it for destruction and re-renders it anyway rather than
-  // dropping it. Left alone it would renumber like a survivor and look
-  // restored, so hide it before the first renumber.
+  // hidden is set from _destroy, never merely added to, because the two
+  // survive a Turbo restoration visit differently: hidden reflects to a DOM
+  // attribute, which cloneNode(true) preserves in the cached snapshot, while
+  // _destroy is a plain input value, which it does not. Deleting a row, then
+  // navigating away and back with the browser's Back button, would otherwise
+  // serve a snapshot where the row is still hidden but _destroy has reverted
+  // to the server-rendered "false" — resurrecting it as invisible-but-alive.
+  // A row re-rendered after a failed save can also already carry
+  // _destroy="true", since Rails marks it for destruction and re-renders it
+  // anyway rather than dropping it.
   connect() {
-    this.rowTargets
-      .filter((row) => this.destroyed(row))
-      .forEach((row) => { row.hidden = true })
-
+    this.rowTargets.forEach((row) => { row.hidden = this.destroyed(row) })
     this.renumber()
   }
 

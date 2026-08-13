@@ -75,6 +75,7 @@ class RecipesTest < ApplicationSystemTestCase
     # The nested fields have no labels yet (#15), so rows are addressed by the
     # suffix of the name attribute Rails generates.
     def ingredient_row_named(name)
-      all(ingredient_row).find { |row| row.find("input[name$='[name]']").value == name }
+      all(ingredient_row).find { |row| row.find("input[name$='[name]']").value == name } ||
+        raise("no ingredient row named #{name.inspect}")
     end
 end

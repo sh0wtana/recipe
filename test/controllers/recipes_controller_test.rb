@@ -182,11 +182,13 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_equal [ 0, 1, 2 ], @recipe.ingredients.map(&:position)
   end
 
-  # Clicking add and then not typing anything must not fail the save.
+  # Clicking add and then not typing anything must not fail the save. _destroy
+  # is included because the real form always sends it: Ingredient.new._destroy
+  # is false, and hidden_field renders that as value="false", not an absent key.
   test "update ignores a row the user added and left empty" do
     patch recipe_path(@recipe), params: { recipe: {
       title: @recipe.title,
-      ingredients_attributes: { "1754821093117" => { name: "", amount: "", position: 3 } } } }
+      ingredients_attributes: { "1754821093117" => { name: "", amount: "", position: 3, _destroy: "false" } } } }
 
     assert_redirected_to recipe_path(@recipe)
     assert_equal 3, @recipe.reload.ingredients.count
