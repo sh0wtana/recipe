@@ -63,12 +63,8 @@ class RecipePagesTest < ActionDispatch::IntegrationTest
   end
 
   # The Stimulus controller finds these by attribute, one of each per row.
-  #
-  # Scoped to the list, not just the fieldset: the fieldset also holds a
-  # <template> for cloning new rows, built from this same partial so the
-  # markup is never duplicated. A real browser never renders <template>
-  # content, but assert_select's parser doesn't know that, so an unscoped
-  # selector would double-count the template's own copy of these fields.
+  # Scoped to the list because the fieldset also holds a <template> of the same
+  # partial, and assert_select counts its fields even though a browser wouldn't.
   test "edit renders the row hooks and a remove button for each ingredient" do
     get edit_recipe_path(@recipe)
 
