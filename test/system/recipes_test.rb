@@ -7,8 +7,6 @@ class RecipesTest < ApplicationSystemTestCase
     sign_in_as users(:one)
   end
 
-  # The project's first system test. Until this passes, nothing else in the
-  # browser is worth debugging.
   test "signing in lands on the recipe list" do
     assert_selector "h1", text: I18n.t("recipes.index.title")
   end
@@ -50,10 +48,8 @@ class RecipesTest < ApplicationSystemTestCase
     assert_equal [ 0, 1, 2 ], @recipe.reload.ingredients.map(&:position)
   end
 
-  # Rails marks a row for destruction while assigning attributes, before the
-  # save is attempted, so a failed save re-renders it — still flagged. Only a
-  # browser can show whether connect() actually hides it; the params the
-  # server received are already covered at the integration level.
+  # Only a browser shows whether connect() actually hides the re-rendered row.
+  # What the server received is already covered at the integration level.
   test "a deleted row stays hidden after a failed save" do
     visit edit_recipe_path(@recipe)
 
@@ -68,9 +64,10 @@ class RecipesTest < ApplicationSystemTestCase
   end
 
   private
-    # A row carries the row target — the controller defines it the same way.
-    def ingredient_row = "#ingredient-fields [data-nested-rows-target='list'] > div"
-    def step_row       = "#step-fields [data-nested-rows-target='list'] > div"
+    # Matching the row target, so the controller and the test agree on what a
+    # row is. <template> contents are invisible to querySelectorAll.
+    def ingredient_row = "#ingredient-fields [data-nested-rows-target='row']"
+    def step_row       = "#step-fields [data-nested-rows-target='row']"
 
     # The nested fields have no labels yet (#15), so rows are addressed by the
     # suffix of the name attribute Rails generates.

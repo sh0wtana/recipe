@@ -141,10 +141,8 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_content
   end
 
-  # Rails marks a nested row for destruction during attribute assignment,
-  # before the save is attempted — a failed save doesn't undo that. The
-  # re-rendered edit form still yields the row, still flagged, so the editor
-  # can tell it apart from a survivor instead of showing it as restored.
+  # A failed save does not undo the destruction mark, so the re-rendered form
+  # still carries it — which is what lets the editor keep the row hidden.
   test "update with a blank title re-renders a row still flagged for destruction" do
     chicken, soy_sauce, ginger = @recipe.ingredients.to_a
 
@@ -163,8 +161,7 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
   end
 
   # The shape the editor submits after a delete: the removed row carries
-  # _destroy, the survivors carry positions renumbered by DOM order, and a
-  # row added in the browser arrives under a timestamp index.
+  # _destroy, the survivors carry positions renumbered by DOM order.
   test "update destroys a row marked _destroy and stores the renumbered positions" do
     chicken, soy_sauce, ginger = @recipe.ingredients.to_a
 
@@ -182,9 +179,8 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_equal [ 0, 1, 2 ], @recipe.ingredients.map(&:position)
   end
 
-  # Clicking add and then not typing anything must not fail the save. _destroy
-  # is included because the real form always sends it: Ingredient.new._destroy
-  # is false, and hidden_field renders that as value="false", not an absent key.
+  # _destroy is here because the real form always sends it. Without it the test
+  # would still pass if BLANK_ROW stopped ignoring _destroy, while the form broke.
   test "update ignores a row the user added and left empty" do
     patch recipe_path(@recipe), params: { recipe: {
       title: @recipe.title,
