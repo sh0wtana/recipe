@@ -1,22 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Mounted once per fieldset, so ingredients and steps get independent instances.
-// Nothing here knows which collection it is driving: a row is whatever carries
-// the row target, and the only fields it touches are the two hidden ones every
-// row has.
+// One instance per fieldset, so ingredients and steps renumber independently.
 export default class extends Controller {
   static targets = ["list", "row", "template"]
 
-  // hidden is set from _destroy, never merely added to, because the two
-  // survive a Turbo restoration visit differently: hidden reflects to a DOM
-  // attribute, which cloneNode(true) preserves in the cached snapshot, while
-  // _destroy is a plain input value, which it does not. Deleting a row, then
-  // navigating away and back with the browser's Back button, would otherwise
-  // serve a snapshot where the row is still hidden but _destroy has reverted
-  // to the server-rendered "false" — resurrecting it as invisible-but-alive.
-  // A row re-rendered after a failed save can also already carry
-  // _destroy="true", since Rails marks it for destruction and re-renders it
-  // anyway rather than dropping it.
+  // A row can arrive already deleted two ways: a failed save re-renders it
+  // still flagged, and a Turbo snapshot restores hidden (an attribute) without
+  // _destroy (a property). Deriving one from the other covers both.
   connect() {
     this.rowTargets.forEach((row) => { row.hidden = this.destroyed(row) })
     this.renumber()
@@ -46,9 +36,8 @@ export default class extends Controller {
       .forEach((row, index) => { row.querySelector("[data-position]").value = index })
   }
 
-  // Rails renders the field as the string "false" when a row is not marked
-  // for destruction, and Boolean("false") is true — so this checks the value
-  // against the set of true-ish Rails booleans instead of trusting JS truthiness.
+  // Rails renders an unflagged row as the string "false", and Boolean("false")
+  // is true.
   destroyed(row) {
     return [ "1", "true" ].includes(row.querySelector("[data-destroy]").value)
   }
