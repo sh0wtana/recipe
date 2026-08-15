@@ -1,5 +1,3 @@
-<%# #13 adds the tag chips. Deliberately no tag_names field yet: an empty
-    array clears every tag, so the sentinel arrives with the chip UI. %>
 <%= form_with model: recipe do |form| %>
   <% if recipe.errors.any? %>
     <div id="error_explanation">
@@ -25,6 +23,25 @@
     <%= form.label :servings %>
     <%= form.text_field :servings %>
   </div>
+
+  <fieldset id="tag-fields">
+    <legend><%= Recipe.human_attribute_name(:tags) %></legend>
+
+    <% tag_choices(recipe).each_with_index do |name, index| %>
+      <div>
+        <%= check_box_tag "recipe[tag_names][]", name,
+              recipe.tag_names.include?(name), id: "tag-#{index}" %>
+        <%= label_tag "tag-#{index}", name %>
+      </div>
+    <% end %>
+
+    <%# Submits even when empty, which is the only reason unticking every box
+        arrives as a deliberate clear rather than as no tag_names at all. %>
+    <div>
+      <%= label_tag "new-tag", t(".new_tag") %>
+      <%= text_field_tag "recipe[tag_names][]", nil, id: "new-tag" %>
+    </div>
+  </fieldset>
 
   <fieldset id="ingredient-fields" data-controller="nested-rows">
     <legend><%= Recipe.human_attribute_name(:ingredients) %></legend>
