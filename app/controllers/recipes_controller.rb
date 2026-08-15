@@ -1,6 +1,8 @@
 class RecipesController < ApplicationController
   before_action :set_recipe, only: %i[ show edit update destroy ]
 
+  PAGE_LIMIT = 20
+
   def index
     # Conditions land on the relation Ransack is given, so starting from the
     # association keeps a crafted query inside this user's recipes.
@@ -10,7 +12,9 @@ class RecipesController < ApplicationController
     @search_term = params.dig(:q, Recipe::SEARCH_PARAM)
 
     # distinct: a has_many match returns the recipe once per matching row.
-    @recipes = @q.result(distinct: true).includes(:tags).order(created_at: :desc)
+    found = @q.result(distinct: true).includes(:tags).order(created_at: :desc)
+
+    @pagy, @recipes = pagy(:offset, found, limit: PAGE_LIMIT)
   end
 
   def show

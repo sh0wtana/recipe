@@ -22,6 +22,9 @@ gem "jbuilder"
 # Search and filter the recipe list [https://github.com/activerecord-hackery/ransack]
 gem "ransack"
 
+# Paginate the recipe list [https://github.com/ddnexus/pagy]
+gem "pagy", "~> 43.6"
+
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.7"
 
