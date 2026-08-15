@@ -1,10 +1,21 @@
 class TagsController < ApplicationController
   before_action :set_tag, only: %i[ edit update destroy ]
 
+  PAGE_LIMIT = 40
+
   def index
+    # Conditions land on the relation Ransack is given, so starting from the
+    # association keeps a crafted query inside this user's tags.
+    @q = Current.user.tags.ransack(params[:q])
+
+    # Lets the empty state say "nothing matched" rather than "no tags".
+    @search_term = params.dig(:q, Tag::SEARCH_PARAM)
+
     # Eager loaded because every row shows its recipe count, and that count is
     # the only warning before a delete that cannot be undone.
-    @tags = Current.user.tags.includes(:recipes).order(:name)
+    found = @q.result.includes(:recipes).order(:name)
+
+    @pagy, @tags = pagy(:offset, found, limit: PAGE_LIMIT)
   end
 
   def new

@@ -95,6 +95,10 @@ ja:
     index:
       title: タグ
       empty: まだタグがありません
+      no_results: 該当するタグがありません
+      search: キーワード
+      search_submit: 検索
+      clear_search: 検索を解除
       recipes_count: "%{count}件のレシピ"
       new_tag: 新しいタグ
       destroy: 削除
