@@ -2,23 +2,27 @@
   <%# Sections, not URLs. current_page? would drop the highlight the moment a
       search added query params, or the moment a recipe was opened. %>
   <% editing = controller_name == "recipes" && action_name.in?(%w[new create edit update]) %>
+  <% listing = controller_name == "recipes" && !editing %>
+  <% tagging = controller_name == "tags" %>
 
   <%# .dock brings its own base-100 background, fixed position and safe-area
       padding. Only the divider is darkened — daisyUI's own is nearly invisible. %>
   <nav class="dock dock-lg border-t border-base-300 md:hidden">
-    <%= link_to recipes_path,
-          class: class_names("dock-active text-primary" => controller_name == "recipes" && !editing).presence do %>
+    <%# aria-current, not colour alone — otherwise all three read alike aloud. %>
+    <%= link_to recipes_path, "aria-current": ("page" if listing),
+          class: class_names("dock-active text-primary" => listing).presence do %>
       <span class="text-2xl leading-none" aria-hidden="true">🔍</span>
       <span class="dock-label"><%= t(".recipes") %></span>
     <% end %>
 
-    <%= link_to new_recipe_path, class: class_names("dock-active text-primary" => editing).presence do %>
+    <%= link_to new_recipe_path, "aria-current": ("page" if editing),
+          class: class_names("dock-active text-primary" => editing).presence do %>
       <span class="text-2xl leading-none" aria-hidden="true">✏️</span>
       <span class="dock-label"><%= t(".new_recipe") %></span>
     <% end %>
 
-    <%= link_to tags_path,
-          class: class_names("dock-active text-primary" => controller_name == "tags").presence do %>
+    <%= link_to tags_path, "aria-current": ("page" if tagging),
+          class: class_names("dock-active text-primary" => tagging).presence do %>
       <span class="text-2xl leading-none" aria-hidden="true">🏷️</span>
       <span class="dock-label"><%= t(".tags") %></span>
     <% end %>

@@ -5,7 +5,10 @@
         class: "block px-4 pt-4 text-lg font-semibold leading-snug after:absolute after:inset-0" %>
 
   <% if recipe.tags.any? %>
-    <ul class="relative z-10 flex flex-wrap gap-1.5 px-4 pt-2">
+    <%# relative alone lifts these above the stretched overlay, which is z-auto.
+        A z-index here would escape the card — .card is relative but z-auto, so
+        it opens no stacking context — and paint over the fixed dock. %>
+    <ul class="relative flex flex-wrap gap-1.5 px-4 pt-2">
       <% recipe.tags.each do |tag| %>
         <li>
           <%= link_to tag.name, recipes_path(q: { Recipe::SEARCH_PARAM => tag.name }),
@@ -15,5 +18,5 @@
     </ul>
   <% end %>
 
-  <time class="px-4 pb-4 pt-2 text-sm opacity-60" datetime="<%= recipe.created_at.iso8601 %>"><%= l(recipe.created_at, format: :long) %></time>
+  <time class="px-4 pb-4 pt-2 text-sm opacity-70" datetime="<%= recipe.created_at.iso8601 %>"><%= l(recipe.created_at, format: :long) %></time>
 </li>

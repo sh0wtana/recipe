@@ -20,7 +20,10 @@
   --color-base-300: oklch(92% 0.008 85);
   --color-base-content: oklch(28% 0.012 60);
 
-  --color-primary: oklch(72% 0.165 48);
+  /* Deeper than Cookpad's orange on purpose. Theirs is around L=72%, which puts
+     white button text at 2.6:1 — under half of WCAG AA. At 56% it clears 4.5:1
+     both as a button fill and as the step numbers' marker colour. */
+  --color-primary: oklch(56% 0.165 48);
   --color-primary-content: oklch(100% 0 0);
   --color-secondary: oklch(93% 0.02 75);
   --color-secondary-content: oklch(40% 0.03 60);
@@ -35,15 +38,18 @@
   --color-success-content: oklch(25% 0.05 155);
   --color-warning: oklch(80% 0.15 80);
   --color-warning-content: oklch(30% 0.06 80);
-  --color-error: oklch(63.5% 0.212 28);
+  /* Cookpad's #FE463A darkened for the same reason — it read 3.7:1 as the
+     destroy label on a card, and destroy is the one label worth reading. */
+  --color-error: oklch(58% 0.212 28);
   --color-error-content: oklch(100% 0 0);
 
   --radius-selector: 9999px;
   --radius-field: 0.5rem;
   --radius-box: 0.75rem;
 
-  /* Control heights derive from this. 0.3rem lands every input and button on
-     48px, the tap target a wet hand needs, without touching a single view. */
+  /* Control heights derive from this, so 0.3rem puts a default input or button
+     at 48px — the tap target a wet hand needs — without a class in any view.
+     The -sm modifiers the editor rows use scale off it too, landing at 38px. */
   --size-selector: 0.28rem;
   --size-field: 0.3rem;
 
