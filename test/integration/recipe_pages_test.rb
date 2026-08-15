@@ -55,6 +55,23 @@ class RecipePagesTest < ActionDispatch::IntegrationTest
     assert_select "#tips", false
   end
 
+  test "new limits title, description, servings and tips to their maximum length" do
+    get new_recipe_path
+
+    assert_select "input#recipe_title[maxlength=?]", "20"
+    assert_select "textarea#recipe_description[maxlength=?]", "320"
+    assert_select "input#recipe_servings[maxlength=?]", "25"
+    assert_select "textarea#recipe_tips[maxlength=?]", "120"
+  end
+
+  test "edit limits ingredient and step fields to their maximum length" do
+    get edit_recipe_path(@recipe)
+
+    assert_select "input[aria-label=?][maxlength=?]", Ingredient.human_attribute_name(:name), "30"
+    assert_select "input[aria-label=?][maxlength=?]", Ingredient.human_attribute_name(:amount), "30"
+    assert_select "textarea[aria-label=?][maxlength=?]", Step.human_attribute_name(:body), "50"
+  end
+
   # The Stimulus controller finds these by attribute, one of each per row.
   # Scoped to the list because the fieldset also holds a <template> of the same
   # partial, and assert_select counts its fields even though a browser wouldn't.

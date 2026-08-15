@@ -21,7 +21,8 @@
 class Ingredient < ApplicationRecord
   belongs_to :recipe
 
-  validates :name, presence: true
+  validates :name, presence: true, length: { maximum: 30 }
+  validates :amount, length: { maximum: 30 }
   validates :position, presence: true
 
   # Reached only through a Recipe search, so no association needs opening up.
