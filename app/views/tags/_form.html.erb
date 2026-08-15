@@ -1,0 +1,18 @@
+<%= form_with model: tag do |form| %>
+  <% if tag.errors.any? %>
+    <div id="error_explanation">
+      <ul>
+        <% tag.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <%= form.submit %>
+<% end %>
