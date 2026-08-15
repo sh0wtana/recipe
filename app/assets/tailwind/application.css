@@ -104,6 +104,12 @@ body:has(form :is(input, textarea):focus) .dock {
   min-width: 1.5rem;
 }
 
+/* Without an href the default cursor is a text caret, which reads as selectable
+   text rather than a spent control. Taken from the gem's own stylesheet. */
+.pagy a:not([href]) {
+  cursor: default;
+}
+
 /* Exhausted arrows and the ellipsis. Disabled controls are exempt from the
    contrast floor, and dimming them is what marks the end of the series. */
 .pagy a[aria-disabled="true"]:not([aria-current]) {
