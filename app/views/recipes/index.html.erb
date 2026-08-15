@@ -31,6 +31,8 @@
         </li>
       <% end %>
     </ul>
+
+    <%== @pagy.series_nav %>
   <%# "No recipes" would be a lie when a search simply found nothing. %>
   <% elsif @search_term.present? %>
     <p><%= t(".no_results") %></p>
