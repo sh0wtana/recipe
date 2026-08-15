@@ -1,18 +1,15 @@
-<li class="card relative bg-base-100 shadow-sm">
-  <%# Stretched hit area, so the whole card taps through to the recipe. Wrapping
-      the card in an anchor instead would nest the tag links inside it. %>
+<%# isolate keeps these z-indexes off the fixed dock. The overlay needs z-10 to
+    clear <time>, whose opacity paints it alongside positioned elements. %>
+<li class="card relative isolate bg-base-100 shadow-sm">
   <%= link_to recipe.title, recipe,
-        class: "block px-4 pt-4 text-lg font-semibold leading-snug after:absolute after:inset-0" %>
+        class: "block px-4 pt-4 text-lg font-semibold leading-snug after:absolute after:inset-0 after:z-10" %>
 
   <% if recipe.tags.any? %>
-    <%# relative alone lifts these above the stretched overlay, which is z-auto.
-        A z-index here would escape the card — .card is relative but z-auto, so
-        it opens no stacking context — and paint over the fixed dock. %>
-    <ul class="relative flex flex-wrap gap-1.5 px-4 pt-2">
+    <ul class="flex flex-wrap gap-1.5 px-4 pt-2">
       <% recipe.tags.each do |tag| %>
         <li>
           <%= link_to tag.name, recipes_path(q: { Recipe::SEARCH_PARAM => tag.name }),
-                class: "badge badge-secondary badge-sm" %>
+                class: "badge badge-secondary badge-sm relative z-20" %>
         </li>
       <% end %>
     </ul>
