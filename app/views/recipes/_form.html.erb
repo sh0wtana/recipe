@@ -11,17 +11,26 @@
 
   <div class="card grid gap-3 bg-base-100 p-4 shadow-sm">
     <div class="grid gap-1">
-      <%= form.label :title, class: "text-sm font-medium" %>
+      <div class="flex items-baseline justify-between">
+        <%= form.label :title, class: "text-sm font-medium" %>
+        <span class="max-length-hint text-xs opacity-70"><%= t("shared.forms.max_length_hint", count: 20) %></span>
+      </div>
       <%= form.text_field :title, maxlength: 20, class: "input w-full" %>
     </div>
 
     <div class="grid gap-1">
-      <%= form.label :description, class: "text-sm font-medium" %>
+      <div class="flex items-baseline justify-between">
+        <%= form.label :description, class: "text-sm font-medium" %>
+        <span class="max-length-hint text-xs opacity-70"><%= t("shared.forms.max_length_hint", count: 320) %></span>
+      </div>
       <%= form.text_area :description, rows: 3, maxlength: 320, class: "textarea w-full" %>
     </div>
 
     <div class="grid gap-1">
-      <%= form.label :servings, class: "text-sm font-medium" %>
+      <div class="flex items-baseline justify-between">
+        <%= form.label :servings, class: "text-sm font-medium" %>
+        <span class="max-length-hint text-xs opacity-70"><%= t("shared.forms.max_length_hint", count: 25) %></span>
+      </div>
       <%= form.text_field :servings, maxlength: 25, class: "input w-full" %>
     </div>
   </div>
@@ -42,8 +51,11 @@
     <%# Submits even when empty, which is the only reason unticking every box
         arrives as a deliberate clear rather than as no tag_names at all. %>
     <div class="grid gap-1">
-      <%= label_tag "new-tag", t(".new_tag"), class: "text-sm font-medium" %>
-      <%= text_field_tag "recipe[tag_names][]", nil, id: "new-tag", class: "input w-full" %>
+      <div class="flex items-baseline justify-between">
+        <%= label_tag "new-tag", t(".new_tag"), class: "text-sm font-medium" %>
+        <span class="max-length-hint text-xs opacity-70"><%= t("shared.forms.max_length_hint", count: 20) %></span>
+      </div>
+      <%= text_field_tag "recipe[tag_names][]", nil, id: "new-tag", maxlength: 20, class: "input w-full" %>
     </div>
   </fieldset>
 
@@ -86,7 +98,10 @@
   </fieldset>
 
   <div class="card grid gap-1 bg-base-100 p-4 shadow-sm">
-    <%= form.label :tips, class: "text-sm font-medium" %>
+    <div class="flex items-baseline justify-between">
+      <%= form.label :tips, class: "text-sm font-medium" %>
+      <span class="max-length-hint text-xs opacity-70"><%= t("shared.forms.max_length_hint", count: 120) %></span>
+    </div>
     <%= form.text_area :tips, rows: 3, maxlength: 120, class: "textarea w-full" %>
   </div>
 

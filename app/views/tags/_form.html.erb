@@ -10,8 +10,11 @@
   <% end %>
 
   <div class="card grid gap-1 bg-base-100 p-4 shadow-sm">
-    <%= form.label :name, class: "text-sm font-medium" %>
-    <%= form.text_field :name, class: "input w-full" %>
+    <div class="flex items-baseline justify-between">
+      <%= form.label :name, class: "text-sm font-medium" %>
+      <span class="max-length-hint text-xs opacity-70"><%= t("shared.forms.max_length_hint", count: 20) %></span>
+    </div>
+    <%= form.text_field :name, maxlength: 20, class: "input w-full" %>
   </div>
 
   <%= form.submit class: "btn btn-primary btn-block" %>

@@ -45,4 +45,11 @@ class TagPagesTest < ActionDispatch::IntegrationTest
 
     assert_select "header a[href=?]", tags_path
   end
+
+  test "new hints the maximum length next to the name field" do
+    get new_tag_path
+
+    assert_select "input#tag_name[maxlength=?]", "20"
+    assert_select "label[for=tag_name] ~ .max-length-hint", text: I18n.t("shared.forms.max_length_hint", count: 20)
+  end
 end

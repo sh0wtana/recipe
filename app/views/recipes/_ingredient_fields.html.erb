@@ -1,13 +1,19 @@
-<div data-nested-rows-target="row" class="flex items-center gap-2">
+<div data-nested-rows-target="row" class="flex items-start gap-2">
   <%# 2:1 — a name needs the room, an amount is a few characters. min-w-0 lets
       both shrink past their content instead of overflowing the row. %>
-  <%= form.text_field :name, maxlength: 30, class: "input input-sm min-w-0 flex-[2]",
-        placeholder: Ingredient.human_attribute_name(:name),
-        "aria-label": Ingredient.human_attribute_name(:name) %>
-  <%= form.text_field :amount, maxlength: 30, class: "input input-sm min-w-0 flex-1",
-        placeholder: Ingredient.human_attribute_name(:amount),
-        "aria-label": Ingredient.human_attribute_name(:amount) %>
+  <div class="grid min-w-0 flex-[2] gap-0.5">
+    <%= form.text_field :name, maxlength: 30, class: "input input-sm w-full",
+          placeholder: Ingredient.human_attribute_name(:name),
+          "aria-label": Ingredient.human_attribute_name(:name) %>
+    <span class="max-length-hint text-xs opacity-60"><%= t("shared.forms.max_length_hint", count: 30) %></span>
+  </div>
+  <div class="grid min-w-0 flex-1 gap-0.5">
+    <%= form.text_field :amount, maxlength: 30, class: "input input-sm w-full",
+          placeholder: Ingredient.human_attribute_name(:amount),
+          "aria-label": Ingredient.human_attribute_name(:amount) %>
+    <span class="max-length-hint text-xs opacity-60"><%= t("shared.forms.max_length_hint", count: 30) %></span>
+  </div>
   <%= form.hidden_field :position, data: { position: "" } %>
   <%= form.hidden_field :_destroy, data: { destroy: "" } %>
-  <button type="button" data-action="nested-rows#remove" class="btn btn-ghost btn-sm shrink-0 text-error"><%= t(".remove") %></button>
+  <button type="button" data-action="nested-rows#remove" class="btn btn-ghost btn-sm mt-1 shrink-0 text-error"><%= t(".remove") %></button>
 </div>
