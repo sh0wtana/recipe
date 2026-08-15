@@ -63,6 +63,16 @@ class RecipesTest < ApplicationSystemTestCase
     assert_selector ingredient_row, count: 2
   end
 
+  test "Enter in the title does not save and leave the editor" do
+    visit new_recipe_path
+
+    fill_in Recipe.human_attribute_name(:title), with: "きんぴら"
+    find_field(Recipe.human_attribute_name(:title)).send_keys(:enter)
+
+    assert_current_path new_recipe_path
+    assert_not Recipe.exists?(title: "きんぴら")
+  end
+
   private
     # Matching the row target, so the controller and the test agree on what a
     # row is. <template> contents are invisible to querySelectorAll.

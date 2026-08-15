@@ -1,4 +1,6 @@
-<%= form_with model: recipe, class: "grid gap-5" do |form| %>
+<%= form_with model: recipe,
+      data: { controller: "submit-guard", action: "keydown->submit-guard#guard" },
+      class: "grid gap-5" do |form| %>
   <% if recipe.errors.any? %>
     <div id="error_explanation" class="alert alert-error">
       <ul class="list-disc pl-5">
