@@ -1,0 +1,19 @@
+<li class="card relative bg-base-100 shadow-sm">
+  <%# Stretched hit area, so the whole card taps through to the recipe. Wrapping
+      the card in an anchor instead would nest the tag links inside it. %>
+  <%= link_to recipe.title, recipe,
+        class: "block px-4 pt-4 text-lg font-semibold leading-snug after:absolute after:inset-0" %>
+
+  <% if recipe.tags.any? %>
+    <ul class="relative z-10 flex flex-wrap gap-1.5 px-4 pt-2">
+      <% recipe.tags.each do |tag| %>
+        <li>
+          <%= link_to tag.name, recipes_path(q: { Recipe::SEARCH_PARAM => tag.name }),
+                class: "badge badge-secondary badge-sm" %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <time class="px-4 pb-4 pt-2 text-sm opacity-60" datetime="<%= recipe.created_at.iso8601 %>"><%= l(recipe.created_at, format: :long) %></time>
+</li>

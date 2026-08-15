@@ -1,6 +1,8 @@
-<div data-nested-rows-target="row">
-  <%= form.text_area :body %>
+<div data-nested-rows-target="row" class="flex items-start gap-2">
+  <%= form.text_area :body, rows: 2, class: "textarea min-w-0 flex-1",
+        placeholder: Step.human_attribute_name(:body),
+        "aria-label": Step.human_attribute_name(:body) %>
   <%= form.hidden_field :position, data: { position: "" } %>
   <%= form.hidden_field :_destroy, data: { destroy: "" } %>
-  <button type="button" data-action="nested-rows#remove"><%= t(".remove") %></button>
+  <button type="button" data-action="nested-rows#remove" class="btn btn-ghost btn-xs mt-1 shrink-0 text-error"><%= t(".remove") %></button>
 </div>

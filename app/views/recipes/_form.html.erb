@@ -1,7 +1,7 @@
-<%= form_with model: recipe do |form| %>
+<%= form_with model: recipe, class: "grid gap-5" do |form| %>
   <% if recipe.errors.any? %>
-    <div id="error_explanation">
-      <ul>
+    <div id="error_explanation" class="alert alert-error">
+      <ul class="list-disc pl-5">
         <% recipe.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -9,44 +9,48 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :title %>
-    <%= form.text_field :title %>
+  <div class="card grid gap-3 bg-base-100 p-4 shadow-sm">
+    <div class="grid gap-1">
+      <%= form.label :title, class: "text-sm font-medium" %>
+      <%= form.text_field :title, class: "input w-full" %>
+    </div>
+
+    <div class="grid gap-1">
+      <%= form.label :description, class: "text-sm font-medium" %>
+      <%= form.text_area :description, rows: 3, class: "textarea w-full" %>
+    </div>
+
+    <div class="grid gap-1">
+      <%= form.label :servings, class: "text-sm font-medium" %>
+      <%= form.text_field :servings, class: "input w-full" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :description %>
-    <%= form.text_area :description %>
-  </div>
+  <fieldset id="tag-fields" class="card grid gap-3 bg-base-100 p-4 shadow-sm">
+    <legend class="mb-2 text-lg font-semibold"><%= Recipe.human_attribute_name(:tags) %></legend>
 
-  <div>
-    <%= form.label :servings %>
-    <%= form.text_field :servings %>
-  </div>
-
-  <fieldset id="tag-fields">
-    <legend><%= Recipe.human_attribute_name(:tags) %></legend>
-
-    <% tag_choices(recipe).each_with_index do |name, index| %>
-      <div>
-        <%= check_box_tag "recipe[tag_names][]", name,
-              recipe.tag_names.include?(name), id: "tag-#{index}" %>
-        <%= label_tag "tag-#{index}", name %>
-      </div>
-    <% end %>
+    <div class="flex flex-wrap gap-x-4 gap-y-2">
+      <% tag_choices(recipe).each_with_index do |name, index| %>
+        <div class="flex items-center gap-2">
+          <%= check_box_tag "recipe[tag_names][]", name,
+                recipe.tag_names.include?(name), id: "tag-#{index}", class: "checkbox checkbox-sm" %>
+          <%= label_tag "tag-#{index}", name, class: "cursor-pointer" %>
+        </div>
+      <% end %>
+    </div>
 
     <%# Submits even when empty, which is the only reason unticking every box
         arrives as a deliberate clear rather than as no tag_names at all. %>
-    <div>
-      <%= label_tag "new-tag", t(".new_tag") %>
-      <%= text_field_tag "recipe[tag_names][]", nil, id: "new-tag" %>
+    <div class="grid gap-1">
+      <%= label_tag "new-tag", t(".new_tag"), class: "text-sm font-medium" %>
+      <%= text_field_tag "recipe[tag_names][]", nil, id: "new-tag", class: "input w-full" %>
     </div>
   </fieldset>
 
-  <fieldset id="ingredient-fields" data-controller="nested-rows">
-    <legend><%= Recipe.human_attribute_name(:ingredients) %></legend>
+  <fieldset id="ingredient-fields" data-controller="nested-rows" class="card grid gap-3 bg-base-100 p-4 shadow-sm">
+    <legend class="mb-2 text-lg font-semibold"><%= Recipe.human_attribute_name(:ingredients) %></legend>
 
-    <div data-nested-rows-target="list">
+    <div data-nested-rows-target="list" class="grid gap-2">
       <%= form.fields_for :ingredients do |ingredient_form| %>
         <%= render "ingredient_fields", form: ingredient_form %>
       <% end %>
@@ -59,13 +63,13 @@
       <% end %>
     </template>
 
-    <button type="button" data-action="nested-rows#add"><%= t(".add_ingredient") %></button>
+    <button type="button" data-action="nested-rows#add" class="btn btn-ghost btn-sm justify-self-start"><%= t(".add_ingredient") %></button>
   </fieldset>
 
-  <fieldset id="step-fields" data-controller="nested-rows">
-    <legend><%= Recipe.human_attribute_name(:steps) %></legend>
+  <fieldset id="step-fields" data-controller="nested-rows" class="card grid gap-3 bg-base-100 p-4 shadow-sm">
+    <legend class="mb-2 text-lg font-semibold"><%= Recipe.human_attribute_name(:steps) %></legend>
 
-    <div data-nested-rows-target="list">
+    <div data-nested-rows-target="list" class="grid gap-2">
       <%= form.fields_for :steps do |step_form| %>
         <%= render "step_fields", form: step_form %>
       <% end %>
@@ -78,13 +82,13 @@
       <% end %>
     </template>
 
-    <button type="button" data-action="nested-rows#add"><%= t(".add_step") %></button>
+    <button type="button" data-action="nested-rows#add" class="btn btn-ghost btn-sm justify-self-start"><%= t(".add_step") %></button>
   </fieldset>
 
-  <div>
-    <%= form.label :tips %>
-    <%= form.text_area :tips %>
+  <div class="card grid gap-1 bg-base-100 p-4 shadow-sm">
+    <%= form.label :tips, class: "text-sm font-medium" %>
+    <%= form.text_area :tips, rows: 3, class: "textarea w-full" %>
   </div>
 
-  <%= form.submit %>
+  <%= form.submit class: "btn btn-primary btn-block" %>
 <% end %>

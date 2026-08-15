@@ -38,6 +38,11 @@ ja:
       new_recipe: 新規レシピ
       tags: タグ
       sign_out: ログアウト
+    # Shorter than the header's, because three labels share the width of a phone.
+    dock:
+      recipes: 一覧
+      new_recipe: 新規
+      tags: タグ
 
   sessions:
     rate_limited: しばらく時間をおいてから再度お試しください
