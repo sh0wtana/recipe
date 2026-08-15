@@ -1,43 +1,70 @@
-<div>
-  <h1><%= @recipe.title %></h1>
+<article class="grid gap-5">
+  <header class="grid gap-3">
+    <h1 class="text-2xl font-bold leading-snug"><%= @recipe.title %></h1>
 
-  <% if @recipe.tags.any? %>
-    <ul id="tags">
-      <% @recipe.tags.each do |tag| %>
-        <li><%= link_to tag.name, recipes_path(q: { Recipe::SEARCH_PARAM => tag.name }) %></li>
+    <% if @recipe.tags.any? %>
+      <ul id="tags" class="flex flex-wrap gap-1.5">
+        <% @recipe.tags.each do |tag| %>
+          <li>
+            <%= link_to tag.name, recipes_path(q: { Recipe::SEARCH_PARAM => tag.name }),
+                  class: "badge badge-secondary badge-sm" %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <% if @recipe.description.present? %>
+      <p id="description" class="leading-relaxed opacity-80"><%= @recipe.description %></p>
+    <% end %>
+  </header>
+
+  <section class="card bg-base-100 p-4 shadow-sm">
+    <div class="mb-2 flex items-baseline justify-between gap-3">
+      <h2 class="text-xl font-semibold"><%= t(".ingredients") %></h2>
+
+      <% if @recipe.servings.present? %>
+        <p id="servings" class="text-sm opacity-70"><%= Recipe.human_attribute_name(:servings) %>: <%= @recipe.servings %></p>
+      <% end %>
+    </div>
+
+    <ul id="ingredients" class="divide-y divide-base-300">
+      <% @recipe.ingredients.each do |ingredient| %>
+        <li class="flex justify-between gap-4 py-2.5">
+          <span><%= ingredient.name %></span>
+          <span class="shrink-0 opacity-70"><%= ingredient.amount %></span>
+        </li>
       <% end %>
     </ul>
-  <% end %>
+  </section>
 
-  <% if @recipe.description.present? %>
-    <p id="description"><%= @recipe.description %></p>
-  <% end %>
+  <section class="card bg-base-100 p-4 shadow-sm">
+    <h2 class="mb-3 text-xl font-semibold"><%= t(".steps") %></h2>
 
-  <% if @recipe.servings.present? %>
-    <p id="servings"><%= Recipe.human_attribute_name(:servings) %>: <%= @recipe.servings %></p>
-  <% end %>
-
-  <h2><%= t(".ingredients") %></h2>
-  <ul id="ingredients">
-    <% @recipe.ingredients.each do |ingredient| %>
-      <li><%= ingredient.name %> <%= ingredient.amount %></li>
-    <% end %>
-  </ul>
-
-  <h2><%= t(".steps") %></h2>
-  <ol id="steps">
-    <% @recipe.steps.each do |step| %>
-      <li><%= step.body %></li>
-    <% end %>
-  </ol>
+    <%# The number is the list marker, never text in the <li>. It is presentation,
+        and RecipePagesTest reads each item as the step body alone. %>
+    <%# space-y rather than grid: a grid item's list marker is not reliably drawn. %>
+    <ol id="steps" class="list-decimal space-y-4 pl-7 marker:text-lg marker:font-bold marker:text-primary">
+      <% @recipe.steps.each do |step| %>
+        <%# Enlarged deliberately: #15 asks for legibility at arm's length. %>
+        <li class="pl-1 text-lg leading-relaxed"><%= step.body %></li>
+      <% end %>
+    </ol>
+  </section>
 
   <% if @recipe.tips.present? %>
-    <h2><%= t(".tips") %></h2>
-    <p id="tips"><%= @recipe.tips %></p>
+    <section class="card bg-base-100 p-4 shadow-sm">
+      <h2 class="mb-2 text-xl font-semibold"><%= t(".tips") %></h2>
+      <p id="tips" class="leading-relaxed"><%= @recipe.tips %></p>
+    </section>
   <% end %>
 
-  <%= link_to t(".edit"), edit_recipe_path(@recipe) %>
-  <%= button_to t(".destroy"), @recipe, method: :delete,
-        form: { data: { turbo_confirm: t(".confirm_destroy", title: @recipe.title) } } %>
-  <%= link_to t(".back"), recipes_path %>
-</div>
+  <div class="grid gap-2">
+    <%= link_to t(".edit"), edit_recipe_path(@recipe), class: "btn btn-primary" %>
+
+    <%= button_to t(".destroy"), @recipe, method: :delete,
+          class: "btn btn-ghost w-full text-error",
+          form: { data: { turbo_confirm: t(".confirm_destroy", title: @recipe.title) } } %>
+
+    <%= link_to t(".back"), recipes_path, class: "btn btn-ghost" %>
+  </div>
+</article>

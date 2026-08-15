@@ -1,7 +1,7 @@
-<%= form_with model: tag do |form| %>
+<%= form_with model: tag, class: "grid gap-4" do |form| %>
   <% if tag.errors.any? %>
-    <div id="error_explanation">
-      <ul>
+    <div id="error_explanation" class="alert alert-error">
+      <ul class="list-disc pl-5">
         <% tag.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -9,10 +9,10 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+  <div class="card grid gap-1 bg-base-100 p-4 shadow-sm">
+    <%= form.label :name, class: "text-sm font-medium" %>
+    <%= form.text_field :name, class: "input w-full" %>
   </div>
 
-  <%= form.submit %>
+  <%= form.submit class: "btn btn-primary btn-block" %>
 <% end %>

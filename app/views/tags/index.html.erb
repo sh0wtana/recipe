@@ -1,25 +1,25 @@
-<div>
-  <h1><%= t(".title") %></h1>
+<div class="grid gap-4">
+  <h1 class="text-2xl font-bold"><%= t(".title") %></h1>
 
-  <%= link_to t(".new_tag"), new_tag_path %>
+  <%= link_to t(".new_tag"), new_tag_path, class: "btn btn-primary btn-block" %>
 
   <% if @tags.any? %>
-    <ul id="tags">
+    <ul id="tags" class="grid gap-2">
       <% @tags.each do |tag| %>
-        <li id="<%= dom_id(tag) %>">
-          <%= link_to tag.name, edit_tag_path(tag) %>
-          <span class="recipes-count"><%= t(".recipes_count", count: tag.recipes.size) %></span>
+        <li id="<%= dom_id(tag) %>" class="card flex-row items-center gap-3 bg-base-100 p-3 shadow-sm">
+          <%= link_to tag.name, edit_tag_path(tag), class: "min-w-0 flex-1 truncate font-medium" %>
+          <span class="recipes-count shrink-0 text-sm opacity-60"><%= t(".recipes_count", count: tag.recipes.size) %></span>
 
           <%# Deleting takes the tag off every recipe that had it, and there is
               no undo, so the confirmation says how many that is. %>
-          <%= button_to t(".destroy"), tag, method: :delete,
+          <%= button_to t(".destroy"), tag, method: :delete, class: "btn btn-ghost btn-xs shrink-0 text-error",
                 form: { data: { turbo_confirm: t(".confirm_destroy", name: tag.name, count: tag.recipes.size) } } %>
         </li>
       <% end %>
     </ul>
   <% else %>
-    <p><%= t(".empty") %></p>
+    <p class="py-8 text-center opacity-60"><%= t(".empty") %></p>
   <% end %>
 
-  <%= link_to t(".back"), recipes_path %>
+  <%= link_to t(".back"), recipes_path, class: "btn btn-ghost" %>
 </div>

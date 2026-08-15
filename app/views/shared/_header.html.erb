@@ -1,13 +1,17 @@
-<header class="container mx-auto px-5 py-4 flex items-center justify-between">
-  <%= link_to "Recipe", root_path, class: "font-bold text-xl" %>
+<header class="sticky top-0 z-30 border-b border-base-300 bg-base-100">
+  <div class="mx-auto flex h-14 max-w-2xl items-center justify-between gap-3 px-4">
+    <%= link_to "Recipe", root_path, class: "text-lg font-bold tracking-tight" %>
 
-  <%# The name renders for everyone, but the sign-in page is reachable while
-      signed out — offering sign out there would be nonsense. %>
-  <% if authenticated? %>
-    <div class="flex items-center gap-4">
-      <%= link_to t(".new_recipe"), new_recipe_path %>
-      <%= link_to t(".tags"), tags_path %>
-      <%= button_to t(".sign_out"), session_path, method: :delete %>
-    </div>
-  <% end %>
+    <%# The name renders for everyone, but the sign-in page is reachable while
+        signed out — offering sign out there would be nonsense. %>
+    <% if authenticated? %>
+      <div class="flex items-center gap-1">
+        <%# The dock covers these on a phone, so they only surface once it is gone. %>
+        <%= link_to t(".new_recipe"), new_recipe_path, class: "btn btn-ghost btn-sm hidden md:inline-flex" %>
+        <%= link_to t(".tags"), tags_path, class: "btn btn-ghost btn-sm hidden md:inline-flex" %>
+        <%= button_to t(".sign_out"), session_path, method: :delete,
+              class: "btn btn-ghost btn-sm font-normal opacity-70" %>
+      </div>
+    <% end %>
+  </div>
 </header>

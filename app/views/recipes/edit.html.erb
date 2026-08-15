@@ -1,7 +1,7 @@
-<div>
-  <h1><%= t(".title") %></h1>
+<div class="grid gap-4">
+  <h1 class="text-2xl font-bold"><%= t(".title") %></h1>
 
   <%= render "form", recipe: @recipe %>
 
-  <%= link_to t(".back"), @recipe %>
+  <%= link_to t(".back"), @recipe, class: "btn btn-ghost" %>
 </div>

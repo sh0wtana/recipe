@@ -1,42 +1,31 @@
-<div>
-  <h1><%= t(".title") %></h1>
+<div class="grid gap-4">
+  <h1 class="text-2xl font-bold"><%= t(".title") %></h1>
 
   <%= search_form_for @q, url: recipes_path do |form| %>
-    <%= form.label Recipe::SEARCH_PARAM, t(".search") %>
-    <%= form.search_field Recipe::SEARCH_PARAM %>
-    <%= form.submit t(".search_submit") %>
+    <%= form.label Recipe::SEARCH_PARAM, t(".search"), class: "sr-only" %>
+
+    <div class="join w-full">
+      <%= form.search_field Recipe::SEARCH_PARAM, placeholder: t(".search"),
+            class: "input join-item w-full bg-base-100" %>
+      <%= form.submit t(".search_submit"), class: "btn btn-primary join-item" %>
+    </div>
   <% end %>
 
   <% if @search_term.present? %>
-    <%= link_to t(".clear_search"), recipes_path, id: "clear-search" %>
+    <%= link_to t(".clear_search"), recipes_path, id: "clear-search",
+          class: "btn btn-ghost btn-sm justify-self-start" %>
   <% end %>
 
   <% if @recipes.any? %>
-    <ul id="recipes">
-      <% @recipes.each do |recipe| %>
-        <li>
-          <%= link_to recipe.title, recipe %>
-
-          <% if recipe.tags.any? %>
-            <ul>
-              <% recipe.tags.each do |tag| %>
-                <li><%= link_to tag.name, recipes_path(q: { Recipe::SEARCH_PARAM => tag.name }) %></li>
-              <% end %>
-            </ul>
-          <% end %>
-
-          <time datetime="<%= recipe.created_at.iso8601 %>">
-            <%= l(recipe.created_at, format: :long) %>
-          </time>
-        </li>
-      <% end %>
+    <ul id="recipes" class="grid gap-3">
+      <%= render @recipes %>
     </ul>
 
     <%== @pagy.series_nav %>
   <%# "No recipes" would be a lie when a search simply found nothing. %>
   <% elsif @search_term.present? %>
-    <p><%= t(".no_results") %></p>
+    <p class="py-8 text-center opacity-60"><%= t(".no_results") %></p>
   <% else %>
-    <p><%= t(".empty") %></p>
+    <p class="py-8 text-center opacity-60"><%= t(".empty") %></p>
   <% end %>
 </div>

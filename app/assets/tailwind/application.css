@@ -3,4 +3,63 @@
 /* daisyUI 5.6.18 — vendored, not from npm.
    Upgrade by re-downloading daisyui.mjs and daisyui-theme.mjs from
    https://github.com/saadeghi/daisyui/releases/latest and bumping this comment. */
-@plugin "./daisyui.mjs";
+@plugin "./daisyui.mjs" {
+  themes: false;
+}
+
+/* daisyUI treats base-100 as the page. Cookpad inverts that — a warm grey canvas
+   with white cards on it — so base-100 is the card here and <body> takes
+   base-200. Components default to base-100, so they come out white unaided. */
+@plugin "./daisyui-theme.mjs" {
+  name: "recipe";
+  default: true;
+  color-scheme: light;
+
+  --color-base-100: oklch(99% 0.003 85);
+  --color-base-200: oklch(96.5% 0.006 85);
+  --color-base-300: oklch(92% 0.008 85);
+  --color-base-content: oklch(28% 0.012 60);
+
+  --color-primary: oklch(72% 0.165 48);
+  --color-primary-content: oklch(100% 0 0);
+  --color-secondary: oklch(93% 0.02 75);
+  --color-secondary-content: oklch(40% 0.03 60);
+  --color-accent: oklch(70% 0.09 165);
+  --color-accent-content: oklch(26% 0.04 165);
+  --color-neutral: oklch(35% 0.01 60);
+  --color-neutral-content: oklch(97% 0.003 85);
+
+  --color-info: oklch(70% 0.12 230);
+  --color-info-content: oklch(25% 0.05 230);
+  --color-success: oklch(68% 0.14 155);
+  --color-success-content: oklch(25% 0.05 155);
+  --color-warning: oklch(80% 0.15 80);
+  --color-warning-content: oklch(30% 0.06 80);
+  --color-error: oklch(63.5% 0.212 28);
+  --color-error-content: oklch(100% 0 0);
+
+  --radius-selector: 9999px;
+  --radius-field: 0.5rem;
+  --radius-box: 0.75rem;
+
+  /* Control heights derive from this. 0.3rem lands every input and button on
+     48px, the tap target a wet hand needs, without touching a single view. */
+  --size-selector: 0.28rem;
+  --size-field: 0.3rem;
+
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@theme {
+  /* Tailwind's stock stack renders Japanese badly on some devices. */
+  --font-sans: system-ui, -apple-system, "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Noto Sans JP", "Yu Gothic", sans-serif;
+}
+
+/* A fixed dock rides above the mobile keyboard and covers the field being typed
+   into, so it stands down while anything has focus. */
+body:has(form :is(input, textarea):focus) .dock {
+  display: none;
+}
