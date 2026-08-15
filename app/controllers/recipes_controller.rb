@@ -2,7 +2,15 @@ class RecipesController < ApplicationController
   before_action :set_recipe, only: %i[ show edit update destroy ]
 
   def index
-    @recipes = Current.user.recipes.includes(:tags).order(created_at: :desc)
+    # Conditions land on the relation Ransack is given, so starting from the
+    # association keeps a crafted query inside this user's recipes.
+    @q = Current.user.recipes.ransack(params[:q])
+
+    # Lets the empty state say "nothing matched" rather than "no recipes".
+    @search_term = params.dig(:q, Recipe::SEARCH_PARAM)
+
+    # distinct: a has_many match returns the recipe once per matching row.
+    @recipes = @q.result(distinct: true).includes(:tags).order(created_at: :desc)
   end
 
   def show

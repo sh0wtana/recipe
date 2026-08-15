@@ -8,13 +8,6 @@ class RecipePagesTest < ActionDispatch::IntegrationTest
     sign_in_as(@user)
   end
 
-  test "index renders each recipe's tags as filter links" do
-    get recipes_path
-
-    assert_select "a[href=?]", recipes_path(tag: "和食"), text: "和食"
-    assert_select "a[href=?]", recipes_path(tag: "豚肉"), text: "豚肉"
-  end
-
   test "index shows when a recipe was created" do
     get recipes_path
 

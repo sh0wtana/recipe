@@ -4,7 +4,7 @@
   <% if @recipe.tags.any? %>
     <ul id="tags">
       <% @recipe.tags.each do |tag| %>
-        <li><%= link_to tag.name, recipes_path(tag: tag.name) %></li>
+        <li><%= link_to tag.name, recipes_path(q: { Recipe::SEARCH_PARAM => tag.name }) %></li>
       <% end %>
     </ul>
   <% end %>
