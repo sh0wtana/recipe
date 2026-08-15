@@ -1,7 +1,10 @@
 <div data-nested-rows-target="row" class="flex items-start gap-2">
-  <%= form.text_area :body, rows: 2, maxlength: 50, class: "textarea min-w-0 flex-1",
-        placeholder: Step.human_attribute_name(:body),
-        "aria-label": Step.human_attribute_name(:body) %>
+  <div class="grid min-w-0 flex-1 gap-0.5">
+    <%= form.text_area :body, rows: 2, maxlength: 50, class: "textarea w-full",
+          placeholder: Step.human_attribute_name(:body),
+          "aria-label": Step.human_attribute_name(:body) %>
+    <span class="max-length-hint text-xs opacity-60"><%= t("shared.forms.max_length_hint", count: 50) %></span>
+  </div>
   <%= form.hidden_field :position, data: { position: "" } %>
   <%= form.hidden_field :_destroy, data: { destroy: "" } %>
   <button type="button" data-action="nested-rows#remove" class="btn btn-ghost btn-sm mt-1 shrink-0 text-error"><%= t(".remove") %></button>

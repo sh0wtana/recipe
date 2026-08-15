@@ -43,6 +43,8 @@ ja:
       recipes: 一覧
       new_recipe: 新規
       tags: タグ
+    forms:
+      max_length_hint: "最大%{count}文字"
 
   sessions:
     rate_limited: しばらく時間をおいてから再度お試しください

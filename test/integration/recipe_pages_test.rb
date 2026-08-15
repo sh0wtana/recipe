@@ -64,12 +64,39 @@ class RecipePagesTest < ActionDispatch::IntegrationTest
     assert_select "textarea#recipe_tips[maxlength=?]", "120"
   end
 
+  test "new hints the maximum length next to title, description, servings and tips" do
+    get new_recipe_path
+
+    assert_select "label[for=recipe_title] ~ .max-length-hint", text: I18n.t("shared.forms.max_length_hint", count: 20)
+    assert_select "label[for=recipe_description] ~ .max-length-hint", text: I18n.t("shared.forms.max_length_hint", count: 320)
+    assert_select "label[for=recipe_servings] ~ .max-length-hint", text: I18n.t("shared.forms.max_length_hint", count: 25)
+    assert_select "label[for=recipe_tips] ~ .max-length-hint", text: I18n.t("shared.forms.max_length_hint", count: 120)
+  end
+
   test "edit limits ingredient and step fields to their maximum length" do
     get edit_recipe_path(@recipe)
 
     assert_select "input[aria-label=?][maxlength=?]", Ingredient.human_attribute_name(:name), "30"
     assert_select "input[aria-label=?][maxlength=?]", Ingredient.human_attribute_name(:amount), "30"
     assert_select "textarea[aria-label=?][maxlength=?]", Step.human_attribute_name(:body), "50"
+  end
+
+  test "edit hints the maximum length under each ingredient field" do
+    get edit_recipe_path(@recipe)
+
+    list = "#ingredient-fields [data-nested-rows-target=list]"
+    assert_select "#{list} input[aria-label=?] ~ .max-length-hint", Ingredient.human_attribute_name(:name),
+      text: I18n.t("shared.forms.max_length_hint", count: 30), count: 3
+    assert_select "#{list} input[aria-label=?] ~ .max-length-hint", Ingredient.human_attribute_name(:amount),
+      text: I18n.t("shared.forms.max_length_hint", count: 30), count: 3
+  end
+
+  test "edit hints the maximum length under each step field" do
+    get edit_recipe_path(@recipe)
+
+    list = "#step-fields [data-nested-rows-target=list]"
+    assert_select "#{list} textarea[aria-label=?] ~ .max-length-hint", Step.human_attribute_name(:body),
+      text: I18n.t("shared.forms.max_length_hint", count: 50), count: 2
   end
 
   # The Stimulus controller finds these by attribute, one of each per row.
@@ -122,6 +149,13 @@ class RecipePagesTest < ActionDispatch::IntegrationTest
     get edit_recipe_path(@recipe)
 
     assert_select "#tag-fields input[type=text][name='recipe[tag_names][]']", count: 1
+  end
+
+  test "edit hints the maximum length next to the new-tag field" do
+    get edit_recipe_path(@recipe)
+
+    assert_select "#tag-fields input[name='recipe[tag_names][]'][maxlength=?]", "20"
+    assert_select "#tag-fields .max-length-hint", text: I18n.t("shared.forms.max_length_hint", count: 20)
   end
 
   # A name the user typed has no Tag row yet, so a list built from their tags
