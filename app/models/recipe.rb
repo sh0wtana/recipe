@@ -37,6 +37,14 @@ class Recipe < ApplicationRecord
 
   validates :title, presence: true
 
+  # A column left out here is unreachable through search, not just unlisted.
+  def self.ransackable_attributes(_auth_object = nil) = %w[title]
+  def self.ransackable_associations(_auth_object = nil) = %w[tags ingredients]
+
+  # ransack_alias would shorten this in the URL, but in 4.4.1 the aliased
+  # condition is dropped without a word and every recipe comes back.
+  SEARCH_PARAM = :title_or_ingredients_name_or_tags_name_cont
+
   # Join rows need the recipe's id, so they wait until after the insert.
   # nil means the form sent no tags; [] means the user cleared them all.
   after_save :apply_tag_names, if: -> { @tag_names }

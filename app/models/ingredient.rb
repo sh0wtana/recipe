@@ -23,4 +23,8 @@ class Ingredient < ApplicationRecord
 
   validates :name, presence: true
   validates :position, presence: true
+
+  # Reached only through a Recipe search, so no association needs opening up.
+  def self.ransackable_attributes(_auth_object = nil) = %w[name]
+  def self.ransackable_associations(_auth_object = nil) = []
 end
