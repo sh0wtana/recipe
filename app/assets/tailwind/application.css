@@ -7,8 +7,8 @@
   themes: false;
 }
 
-/* daisyUI treats base-100 as the page. Cookpad inverts that — a warm grey canvas
-   with white cards on it — so base-100 is the card here and <body> takes
+/* daisyUI treats base-100 as the page. That is inverted here — a warm grey
+   canvas carrying white cards — so base-100 is the card and <body> takes
    base-200. Components default to base-100, so they come out white unaided. */
 @plugin "./daisyui-theme.mjs" {
   name: "recipe";
@@ -20,9 +20,9 @@
   --color-base-300: oklch(92% 0.008 85);
   --color-base-content: oklch(28% 0.012 60);
 
-  /* Deeper than Cookpad's orange on purpose. Theirs is around L=72%, which puts
-     white button text at 2.6:1 — under half of WCAG AA. At 56% it clears 4.5:1
-     both as a button fill and as the step numbers' marker colour. */
+  /* Deeper than the orange this was drawn from, on purpose. At L=72% white
+     button text lands at 2.6:1, under half of WCAG AA. 56% clears 4.5:1 both as
+     a button fill and as the step numbers' marker colour. */
   --color-primary: oklch(56% 0.165 48);
   --color-primary-content: oklch(100% 0 0);
   --color-secondary: oklch(93% 0.02 75);
@@ -38,8 +38,8 @@
   --color-success-content: oklch(25% 0.05 155);
   --color-warning: oklch(80% 0.15 80);
   --color-warning-content: oklch(30% 0.06 80);
-  /* Cookpad's #FE463A darkened for the same reason — it read 3.7:1 as the
-     destroy label on a card, and destroy is the one label worth reading. */
+  /* Darkened for the same reason. At 63.5% it read 3.7:1 as the destroy label
+     on a card, and destroy is the one label worth reading. */
   --color-error: oklch(58% 0.212 28);
   --color-error-content: oklch(100% 0 0);
 
