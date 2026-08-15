@@ -73,6 +73,35 @@ class RecipesTest < ApplicationSystemTestCase
     assert_not Recipe.exists?(title: "きんぴら")
   end
 
+  test "Enter in an ingredient field stays on the editor" do
+    visit edit_recipe_path(@recipe)
+
+    within(ingredient_row_named("醤油")) do
+      find("input[name$='[amount]']").send_keys(:enter)
+    end
+
+    assert_current_path edit_recipe_path(@recipe)
+    assert_selector ingredient_row, count: 3
+  end
+
+  test "Enter in a step body inserts a newline instead of submitting" do
+    visit edit_recipe_path(@recipe)
+
+    body_field = all(step_row).first.find("textarea[name$='[body]']")
+    body_field.set("下味をつける\n強火で揚げる")
+
+    assert_current_path edit_recipe_path(@recipe)
+    assert_equal "下味をつける\n強火で揚げる", body_field.value
+  end
+
+  test "Enter still saves when the save button itself is focused" do
+    visit edit_recipe_path(@recipe)
+
+    find_button(I18n.t("helpers.submit.update")).send_keys(:enter)
+
+    assert_selector "h1", text: @recipe.title
+  end
+
   private
     # Matching the row target, so the controller and the test agree on what a
     # row is. <template> contents are invisible to querySelectorAll.
