@@ -115,3 +115,16 @@ body:has(form :is(input, textarea):focus) .dock {
 .pagy a[aria-disabled="true"]:not([aria-current]) {
   opacity: 0.45;
 }
+
+/* A removed row is hidden rather than detached, and display:none does not
+   increment a counter, so deleting step 2 renumbers the rest on its own. */
+#step-fields [data-nested-rows-target="list"] { counter-reset: step; }
+#step-fields [data-nested-rows-target="row"] { counter-increment: step; }
+#step-fields [data-nested-rows-target="row"]::before {
+  content: counter(step);
+  flex: none;
+  width: 1.75rem;
+  padding-top: 0.6rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
