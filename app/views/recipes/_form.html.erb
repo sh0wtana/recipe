@@ -12,17 +12,17 @@
   <div class="card grid gap-3 bg-base-100 p-4 shadow-sm">
     <div class="grid gap-1">
       <%= form.label :title, class: "text-sm font-medium" %>
-      <%= form.text_field :title, class: "input w-full" %>
+      <%= form.text_field :title, maxlength: 20, class: "input w-full" %>
     </div>
 
     <div class="grid gap-1">
       <%= form.label :description, class: "text-sm font-medium" %>
-      <%= form.text_area :description, rows: 3, class: "textarea w-full" %>
+      <%= form.text_area :description, rows: 3, maxlength: 320, class: "textarea w-full" %>
     </div>
 
     <div class="grid gap-1">
       <%= form.label :servings, class: "text-sm font-medium" %>
-      <%= form.text_field :servings, class: "input w-full" %>
+      <%= form.text_field :servings, maxlength: 25, class: "input w-full" %>
     </div>
   </div>
 
@@ -87,7 +87,7 @@
 
   <div class="card grid gap-1 bg-base-100 p-4 shadow-sm">
     <%= form.label :tips, class: "text-sm font-medium" %>
-    <%= form.text_area :tips, rows: 3, class: "textarea w-full" %>
+    <%= form.text_area :tips, rows: 3, maxlength: 120, class: "textarea w-full" %>
   </div>
 
   <%= form.submit class: "btn btn-primary btn-block" %>

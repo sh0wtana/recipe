@@ -48,4 +48,15 @@ class StepTest < ActiveSupport::TestCase
     assert_predicate step, :invalid?
     assert_predicate step.errors[:recipe], :any?
   end
+
+  test "rejects a body over 50 characters" do
+    step = Step.new(recipe: recipes(:karaage), body: "あ" * 51, position: 0)
+
+    assert_predicate step, :invalid?
+    assert step.errors.of_kind?(:body, :too_long)
+  end
+
+  test "accepts a body of exactly 50 characters" do
+    assert_predicate Step.new(recipe: recipes(:karaage), body: "あ" * 50, position: 0), :valid?
+  end
 end

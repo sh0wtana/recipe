@@ -57,4 +57,26 @@ class IngredientTest < ActiveSupport::TestCase
 
     assert_predicate ingredient, :valid?
   end
+
+  test "rejects a name over 30 characters" do
+    ingredient = Ingredient.new(recipe: recipes(:karaage), name: "あ" * 31, position: 0)
+
+    assert_predicate ingredient, :invalid?
+    assert ingredient.errors.of_kind?(:name, :too_long)
+  end
+
+  test "accepts a name of exactly 30 characters" do
+    assert_predicate Ingredient.new(recipe: recipes(:karaage), name: "あ" * 30, position: 0), :valid?
+  end
+
+  test "rejects an amount over 30 characters" do
+    ingredient = Ingredient.new(recipe: recipes(:karaage), name: "塩", amount: "あ" * 31, position: 0)
+
+    assert_predicate ingredient, :invalid?
+    assert ingredient.errors.of_kind?(:amount, :too_long)
+  end
+
+  test "accepts an amount of exactly 30 characters" do
+    assert_predicate Ingredient.new(recipe: recipes(:karaage), name: "塩", amount: "あ" * 30, position: 0), :valid?
+  end
 end

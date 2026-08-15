@@ -47,6 +47,50 @@ class RecipeTest < ActiveSupport::TestCase
     assert_predicate recipe, :valid?
   end
 
+  test "rejects a title over 20 characters" do
+    recipe = Recipe.new(user: users(:one), title: "あ" * 21)
+
+    assert_predicate recipe, :invalid?
+    assert recipe.errors.of_kind?(:title, :too_long)
+  end
+
+  test "accepts a title of exactly 20 characters" do
+    assert_predicate Recipe.new(user: users(:one), title: "あ" * 20), :valid?
+  end
+
+  test "rejects a description over 320 characters" do
+    recipe = Recipe.new(user: users(:one), title: "肉じゃが", description: "あ" * 321)
+
+    assert_predicate recipe, :invalid?
+    assert recipe.errors.of_kind?(:description, :too_long)
+  end
+
+  test "accepts a description of exactly 320 characters" do
+    assert_predicate Recipe.new(user: users(:one), title: "肉じゃが", description: "あ" * 320), :valid?
+  end
+
+  test "rejects servings over 25 characters" do
+    recipe = Recipe.new(user: users(:one), title: "肉じゃが", servings: "あ" * 26)
+
+    assert_predicate recipe, :invalid?
+    assert recipe.errors.of_kind?(:servings, :too_long)
+  end
+
+  test "accepts servings of exactly 25 characters" do
+    assert_predicate Recipe.new(user: users(:one), title: "肉じゃが", servings: "あ" * 25), :valid?
+  end
+
+  test "rejects tips over 120 characters" do
+    recipe = Recipe.new(user: users(:one), title: "肉じゃが", tips: "あ" * 121)
+
+    assert_predicate recipe, :invalid?
+    assert recipe.errors.of_kind?(:tips, :too_long)
+  end
+
+  test "accepts tips of exactly 120 characters" do
+    assert_predicate Recipe.new(user: users(:one), title: "肉じゃが", tips: "あ" * 120), :valid?
+  end
+
   test "ingredients are ordered by position, not by id" do
     recipe = recipes(:karaage)
     recipe.ingredients.destroy_all

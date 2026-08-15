@@ -35,7 +35,10 @@ class Recipe < ApplicationRecord
   accepts_nested_attributes_for :ingredients, allow_destroy: true, reject_if: BLANK_ROW
   accepts_nested_attributes_for :steps,       allow_destroy: true, reject_if: BLANK_ROW
 
-  validates :title, presence: true
+  validates :title, presence: true, length: { maximum: 20 }
+  validates :description, length: { maximum: 320 }
+  validates :servings, length: { maximum: 25 }
+  validates :tips, length: { maximum: 120 }
 
   # A column left out here is unreachable through search, not just unlisted.
   def self.ransackable_attributes(_auth_object = nil) = %w[title]

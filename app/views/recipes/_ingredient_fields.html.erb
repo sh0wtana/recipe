@@ -1,10 +1,10 @@
 <div data-nested-rows-target="row" class="flex items-center gap-2">
   <%# 2:1 — a name needs the room, an amount is a few characters. min-w-0 lets
       both shrink past their content instead of overflowing the row. %>
-  <%= form.text_field :name, class: "input input-sm min-w-0 flex-[2]",
+  <%= form.text_field :name, maxlength: 30, class: "input input-sm min-w-0 flex-[2]",
         placeholder: Ingredient.human_attribute_name(:name),
         "aria-label": Ingredient.human_attribute_name(:name) %>
-  <%= form.text_field :amount, class: "input input-sm min-w-0 flex-1",
+  <%= form.text_field :amount, maxlength: 30, class: "input input-sm min-w-0 flex-1",
         placeholder: Ingredient.human_attribute_name(:amount),
         "aria-label": Ingredient.human_attribute_name(:amount) %>
   <%= form.hidden_field :position, data: { position: "" } %>

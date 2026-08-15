@@ -108,6 +108,17 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_equal [ @user ], recipe.tags.map(&:user).uniq
   end
 
+  test "create with an ingredient name over the limit re-renders the form and shows the error" do
+    assert_no_difference "Recipe.count" do
+      post recipes_path, params: { recipe: {
+        title: "肉じゃが",
+        ingredients_attributes: { "0" => { name: "あ" * 31, position: 0 } } } }
+    end
+
+    assert_response :unprocessable_content
+    assert_select "#error_explanation li", text: /30文字以内で入力してください/
+  end
+
   test "create with a blank title re-renders the form" do
     assert_no_difference "Recipe.count" do
       post recipes_path, params: { recipe: { title: "" } }
