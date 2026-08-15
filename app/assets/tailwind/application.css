@@ -70,6 +70,16 @@ body:has(form :is(input, textarea):focus) .dock {
   display: none;
 }
 
+/* The dock floats over the foot of the viewport, so anything scrolled flush to
+   the bottom edge lands underneath it. This declares that strip obscured, which
+   browsers honour when scrolling to an anchor or to a newly focused control.
+   WebDriver scrolls by its own path and ignores it — see the system test flake. */
+@media (width < 48rem) {
+  :root {
+    scroll-padding-bottom: 6rem;
+  }
+}
+
 /* Pagy emits bare anchors with no classes, so the pager is styled off the
    attributes it does set. Wrapping rather than scrolling, because a wide series
    plus 48px targets overruns a phone long before the page count gets silly. */
