@@ -69,3 +69,43 @@
 body:has(form :is(input, textarea):focus) .dock {
   display: none;
 }
+
+/* Pagy emits bare anchors with no classes, so the pager is styled off the
+   attributes it does set. Wrapping rather than scrolling, because a wide series
+   plus 48px targets overruns a phone long before the page count gets silly. */
+.pagy {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.pagy a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-field);
+  font-weight: 500;
+}
+
+.pagy a[href]:hover {
+  background-color: var(--color-base-300);
+}
+
+.pagy a[aria-current="page"] {
+  background-color: var(--color-primary);
+  color: var(--color-primary-content);
+}
+
+/* The ellipsis is a label, not a target, so it does not claim a target's width. */
+.pagy a[role="separator"] {
+  min-width: 1.5rem;
+}
+
+/* Exhausted arrows and the ellipsis. Disabled controls are exempt from the
+   contrast floor, and dimming them is what marks the end of the series. */
+.pagy a[aria-disabled="true"]:not([aria-current]) {
+  opacity: 0.45;
+}
