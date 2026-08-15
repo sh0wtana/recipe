@@ -5,6 +5,7 @@ ja:
       recipe: レシピ
       ingredient: 材料
       step: 手順
+      tag: タグ
     attributes:
       user:
         email_address: メールアドレス
@@ -28,10 +29,14 @@ ja:
         recipe: レシピ
         body: 手順
         position: 表示順
+      tag:
+        user: ユーザー
+        name: タグ名
 
   shared:
     header:
       new_recipe: 新規レシピ
+      tags: タグ
       sign_out: ログアウト
 
   sessions:
@@ -76,3 +81,25 @@ ja:
       updated: レシピを更新しました
     destroy:
       destroyed: レシピを削除しました
+
+  tags:
+    index:
+      title: タグ
+      empty: まだタグがありません
+      recipes_count: "%{count}件のレシピ"
+      new_tag: 新しいタグ
+      destroy: 削除
+      confirm_destroy: 「%{name}」を削除しますか？ %{count}件のレシピからタグが外れます
+      back: レシピ一覧へ戻る
+    new:
+      title: 新しいタグ
+      back: タグ一覧へ戻る
+    edit:
+      title: タグを編集
+      back: タグ一覧へ戻る
+    create:
+      created: タグを作成しました
+    update:
+      updated: タグを更新しました
+    destroy:
+      destroyed: タグを削除しました

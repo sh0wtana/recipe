@@ -1,0 +1,25 @@
+<div>
+  <h1><%= t(".title") %></h1>
+
+  <%= link_to t(".new_tag"), new_tag_path %>
+
+  <% if @tags.any? %>
+    <ul id="tags">
+      <% @tags.each do |tag| %>
+        <li id="<%= dom_id(tag) %>">
+          <%= link_to tag.name, edit_tag_path(tag) %>
+          <span class="recipes-count"><%= t(".recipes_count", count: tag.recipes.size) %></span>
+
+          <%# Deleting takes the tag off every recipe that had it, and there is
+              no undo, so the confirmation says how many that is. %>
+          <%= button_to t(".destroy"), tag, method: :delete,
+                form: { data: { turbo_confirm: t(".confirm_destroy", name: tag.name, count: tag.recipes.size) } } %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p><%= t(".empty") %></p>
+  <% end %>
+
+  <%= link_to t(".back"), recipes_path %>
+</div>
