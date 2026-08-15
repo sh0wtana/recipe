@@ -24,7 +24,7 @@ class Tag < ApplicationRecord
 
   normalizes :name, with: ->(n) { n.unicode_normalize(:nfkc).strip }
 
-  validates :name, presence: true, uniqueness: { scope: :user_id }
+  validates :name, presence: true, uniqueness: { scope: :user_id }, length: { maximum: 20 }
 
   # Reached only through a Recipe search, so no association needs opening up.
   def self.ransackable_attributes(_auth_object = nil) = %w[name]

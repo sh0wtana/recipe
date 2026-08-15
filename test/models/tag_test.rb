@@ -48,6 +48,17 @@ class TagTest < ActiveSupport::TestCase
     assert_predicate Tag.new(user: users(:two), name: "豚肉"), :valid?
   end
 
+  test "rejects a name over 20 characters" do
+    tag = Tag.new(user: users(:one), name: "あ" * 21)
+
+    assert_predicate tag, :invalid?
+    assert tag.errors.of_kind?(:name, :too_long)
+  end
+
+  test "accepts a name of exactly 20 characters" do
+    assert_predicate Tag.new(user: users(:one), name: "あ" * 20), :valid?
+  end
+
   test "the database rejects a duplicate name for the same user" do
     assert_raises ActiveRecord::RecordNotUnique do
       Tag.insert!({ user_id: users(:one).id, name: "和食" })
