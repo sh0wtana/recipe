@@ -123,14 +123,31 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to recipe_path(@recipe)
   end
 
-  # The form submits no tag field yet (#13 adds it), so an edit must leave the
-  # existing tags alone rather than clearing them.
+  # Requests that never mention tags at all still exist, so silence has to go on
+  # meaning "leave them alone" rather than "clear them".
   test "update without tag names leaves the tags alone" do
     assert_no_difference "RecipeTag.count" do
       patch recipe_path(@recipe), params: { recipe: { title: "からあげ（改）" } }
     end
 
     assert_equal %w[和食 豚肉].sort, @recipe.reload.tags.map(&:name).sort
+  end
+
+  # Every box unticked and the new-tag field left empty. It reaches here as
+  # [ "" ] and has to survive the permit list to clear anything.
+  test "update with only the empty new-tag field clears the tags" do
+    assert_difference "RecipeTag.count", -2 do
+      patch recipe_path(@recipe), params: { recipe: { title: @recipe.title, tag_names: [ "" ] } }
+    end
+
+    assert_empty @recipe.reload.tags
+  end
+
+  test "update ticks and unticks tags in one save" do
+    patch recipe_path(@recipe), params: {
+      recipe: { title: @recipe.title, tag_names: [ "", "和食", "作り置き", "揚げ物" ] } }
+
+    assert_equal %w[作り置き 和食 揚げ物].sort, @recipe.reload.tags.map(&:name).sort
   end
 
   test "update with a blank title re-renders the form" do

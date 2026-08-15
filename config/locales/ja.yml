@@ -18,6 +18,7 @@ ja:
         tips: コツ・ポイント
         ingredients: 材料
         steps: 手順
+        tags: タグ
       ingredient:
         recipe: レシピ
         name: 材料名
@@ -64,6 +65,7 @@ ja:
     form:
       add_ingredient: 材料を追加
       add_step: 手順を追加
+      new_tag: 新しいタグ
     ingredient_fields:
       remove: 材料を削除
     step_fields:
