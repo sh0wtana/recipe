@@ -1,6 +1,8 @@
 require "application_system_test_case"
 
 class SessionsTest < ApplicationSystemTestCase
+  # sign_in_as clicks the submit button; this test presses Enter instead to verify
+  # that native implicit form submission survived the Enter-key handler refactor.
   test "Enter in the password field still signs in" do
     visit new_session_path
 

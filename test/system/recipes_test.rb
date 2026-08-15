@@ -110,6 +110,7 @@ class RecipesTest < ApplicationSystemTestCase
 
     assert_selector "h1", text: I18n.t("recipes.index.title")
     assert_selector "#recipes", text: @recipe.title
+    assert_selector "#clear-search"
   end
 
   private
