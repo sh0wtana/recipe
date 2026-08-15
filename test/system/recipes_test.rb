@@ -102,6 +102,16 @@ class RecipesTest < ApplicationSystemTestCase
     assert_selector "h1", text: @recipe.title
   end
 
+  test "Enter in the search box still searches" do
+    visit recipes_path
+
+    fill_in I18n.t("recipes.index.search"), with: @recipe.title
+    find_field(I18n.t("recipes.index.search")).send_keys(:enter)
+
+    assert_selector "h1", text: I18n.t("recipes.index.title")
+    assert_selector "#recipes", text: @recipe.title
+  end
+
   private
     # Matching the row target, so the controller and the test agree on what a
     # row is. <template> contents are invisible to querySelectorAll.
