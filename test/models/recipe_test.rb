@@ -310,4 +310,25 @@ class RecipeTest < ActiveSupport::TestCase
     assert_predicate recipe, :invalid?
     assert_equal [ "洋食" ], recipe.tag_names
   end
+
+  # The camera roll is HEVC-coded HEIF. These are the tests that fail when an
+  # environment has libvips without an HEVC decoder, which is the one setup
+  # mistake that breaks every photo at once.
+  test "builds a JPEG thumb variant from an iPhone HEIC" do
+    recipe = recipes(:karaage)
+    recipe.photo.attach(io: file_fixture("dish.heic").open, filename: "dish.heic", content_type: "image/heic")
+
+    variant = recipe.photo.variant(:thumb).processed
+
+    assert_equal "image/jpeg", variant.image.blob.content_type
+  end
+
+  test "builds a JPEG large variant from an iPhone HEIC" do
+    recipe = recipes(:karaage)
+    recipe.photo.attach(io: file_fixture("dish.heic").open, filename: "dish.heic", content_type: "image/heic")
+
+    variant = recipe.photo.variant(:large).processed
+
+    assert_equal "image/jpeg", variant.image.blob.content_type
+  end
 end
