@@ -14,6 +14,11 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # fails with no error anywhere. Nothing scrolls when every page already fits.
   driven_by :selenium, using: :headless_chrome, screen_size: [ 500, 2500 ]
 
+  # Capybara's 2 seconds is not enough for the first request of a run, which
+  # pays for booting Puma and painting a window this tall. It failed roughly one
+  # test per run, always a different one, always on the redirect after sign-in.
+  Capybara.default_max_wait_time = 5
+
   # A real browser never sees a cookie stuffed into the test process, so this
   # signs in for real. Matching by placeholder: that view has no labels.
   def sign_in_as(user, password: "password")
