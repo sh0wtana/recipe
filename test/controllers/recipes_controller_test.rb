@@ -250,6 +250,19 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_predicate Recipe.order(:created_at).last.photo, :attached?
   end
 
+  # The re-rendered form used to ask an unsaved blob for a signed URL and blow
+  # up with a 500, so a blank title plus a photo lost the whole page.
+  test "create re-renders the form when a photo was picked and the title is blank" do
+    assert_no_difference "Recipe.count" do
+      post recipes_path, params: { recipe: {
+        title: "",
+        photo: fixture_file_upload("dish.jpg", "image/jpeg")
+      } }
+    end
+
+    assert_response :unprocessable_content
+  end
+
   test "update with remove_photo purges the attachment" do
     @recipe.photo.attach(io: file_fixture("dish.jpg").open, filename: "dish.jpg", content_type: "image/jpeg")
 
