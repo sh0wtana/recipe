@@ -11,6 +11,44 @@
     </div>
   <% end %>
 
+  <%# The label covers the whole tile so it is one big tap target, which is what
+      one-handed use in a kitchen needs. The 🗑 button has to stay outside the
+      label — a click inside a label is forwarded to the input it wraps, so a
+      button in there would open the photo picker instead of deleting. %>
+  <div class="card relative isolate aspect-[4/3] overflow-hidden bg-base-200 shadow-sm"
+       data-controller="photo-preview">
+    <% image_classes = "absolute inset-0 h-full w-full object-cover" %>
+
+    <label class="absolute inset-0 grid cursor-pointer place-items-center gap-1">
+      <%# No capture attribute. It opens the camera directly and takes the
+          camera roll out of the choice, which is the whole point of the field. %>
+      <%= form.file_field :photo,
+            accept: "image/jpeg,image/png,image/webp,image/heic,image/heif",
+            class: "sr-only",
+            data: { photo_preview_target: "input", action: "photo-preview#show" } %>
+
+      <span class="text-4xl">📷</span>
+      <span class="text-sm opacity-70"><%= t(".choose_photo") %></span>
+
+      <%# alt is empty on purpose. The title field sits right below, and the
+          picture carries nothing a screen reader can use. %>
+      <% if recipe.photo.attached? %>
+        <%= image_tag recipe.photo.variant(:large), alt: "", class: image_classes,
+              data: { photo_preview_target: "image" } %>
+      <% else %>
+        <img alt="" class="<%= image_classes %> hidden" data-photo-preview-target="image">
+      <% end %>
+    </label>
+
+    <%= form.hidden_field :remove_photo, value: "", data: { photo_preview_target: "flag" } %>
+
+    <button type="button"
+            class="btn btn-circle btn-sm absolute right-2 top-2 z-10 <%= "hidden" unless recipe.photo.attached? %>"
+            aria-label="<%= t(".remove_photo") %>"
+            data-photo-preview-target="button"
+            data-action="photo-preview#remove">🗑</button>
+  </div>
+
   <div class="card grid gap-3 bg-base-100 p-4 shadow-sm">
     <div class="grid gap-1">
       <div class="flex items-baseline justify-between">
