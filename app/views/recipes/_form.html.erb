@@ -28,15 +28,17 @@
             data: { photo_preview_target: "input", action: "photo-preview#show" } %>
 
       <span class="text-4xl">📷</span>
-      <span class="text-sm opacity-70"><%= t(".choose_photo") %></span>
+      <%# Doubles as the fallback readout when the browser cannot draw the pick. %>
+      <span class="px-4 text-center text-sm opacity-70" data-photo-preview-target="label"><%= t(".choose_photo") %></span>
 
       <%# alt is empty on purpose. The title field sits right below, and the
           picture carries nothing a screen reader can use. %>
       <% if recipe.photo.attached? %>
         <%= image_tag recipe.photo.variant(:large), alt: "", class: image_classes,
-              data: { photo_preview_target: "image" } %>
+              data: { photo_preview_target: "image", action: "error->photo-preview#failed" } %>
       <% else %>
-        <img alt="" class="<%= image_classes %> hidden" data-photo-preview-target="image">
+        <img alt="" class="<%= image_classes %> hidden" data-photo-preview-target="image"
+             data-action="error->photo-preview#failed">
       <% end %>
     </label>
 
