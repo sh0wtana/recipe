@@ -1,11 +1,23 @@
 <%# isolate keeps these z-indexes off the fixed dock. The overlay needs z-10 to
     clear <time>, whose opacity paints it alongside positioned elements. %>
-<li class="card relative isolate bg-base-100 shadow-sm">
+<%# The thumbnail is positioned rather than placed in a row, so the title, tags
+    and time stay direct children of the <li>. min-h holds the card open when a
+    recipe is too short to reach past the picture. %>
+<li class="card relative isolate min-h-32 bg-base-100 p-4 pl-32 shadow-sm">
+  <%# alt is empty: the title is right there, and reading both says it twice. %>
+  <% if recipe.photo.attached? %>
+    <%= image_tag recipe.photo.variant(:thumb), alt: "", width: 96, height: 96, loading: "lazy",
+          class: "absolute left-4 top-4 size-24 rounded-box object-cover" %>
+  <% else %>
+    <div class="absolute left-4 top-4 grid size-24 place-items-center rounded-box bg-base-200 text-3xl"
+         aria-hidden="true">🍽</div>
+  <% end %>
+
   <%= link_to recipe.title, recipe,
-        class: "block px-4 pt-4 text-lg font-semibold leading-snug after:absolute after:inset-0 after:z-10" %>
+        class: "text-lg font-semibold leading-snug after:absolute after:inset-0 after:z-10" %>
 
   <% if recipe.tags.any? %>
-    <ul class="flex flex-wrap gap-1.5 px-4 pt-2">
+    <ul class="flex flex-wrap gap-1.5 pt-2">
       <% recipe.tags.each do |tag| %>
         <li>
           <%= link_to tag.name, recipes_path(q: { Recipe::SEARCH_PARAM => tag.name }),
@@ -15,5 +27,5 @@
     </ul>
   <% end %>
 
-  <time class="px-4 pb-4 pt-2 text-sm opacity-70" datetime="<%= recipe.created_at.iso8601 %>"><%= l(recipe.created_at, format: :long) %></time>
+  <time class="pt-2 text-sm opacity-70" datetime="<%= recipe.created_at.iso8601 %>"><%= l(recipe.created_at, format: :long) %></time>
 </li>

@@ -169,4 +169,38 @@ class RecipePagesTest < ActionDispatch::IntegrationTest
     assert_select "#tag-fields input[type=checkbox][value=?][checked]", "和食"
     assert_select "#tag-fields input[type=checkbox][value=?]:not([checked])", "豚肉"
   end
+
+  test "show displays the photo when there is one" do
+    attach_photo_to @recipe
+
+    get recipe_path(@recipe)
+
+    assert_select "img[src*=?]", "active_storage"
+  end
+
+  test "show displays no image when there is no photo" do
+    get recipe_path(@recipe)
+
+    assert_select "img", false
+  end
+
+  test "index shows a thumbnail for a recipe with a photo" do
+    attach_photo_to @recipe
+
+    get recipes_path
+
+    assert_select "img[src*=?]", "active_storage"
+  end
+
+  test "index shows a placeholder for a recipe without a photo" do
+    get recipes_path
+
+    assert_select "li img", false
+    assert_select "li", text: /🍽/
+  end
+
+  private
+    def attach_photo_to(recipe)
+      recipe.photo.attach(io: file_fixture("dish.jpg").open, filename: "dish.jpg", content_type: "image/jpeg")
+    end
 end
