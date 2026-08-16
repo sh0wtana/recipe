@@ -331,4 +331,27 @@ class RecipeTest < ActiveSupport::TestCase
 
     assert_equal "image/jpeg", variant.image.blob.content_type
   end
+
+  test "accepts a photo from the camera roll" do
+    recipe = recipes(:karaage)
+    recipe.photo.attach(io: file_fixture("dish.heic").open, filename: "dish.heic", content_type: "image/heic")
+
+    assert_predicate recipe, :valid?
+  end
+
+  test "rejects a file that is not a supported image" do
+    recipe = recipes(:karaage)
+    recipe.photo.attach(io: StringIO.new("not an image"), filename: "notes.pdf", content_type: "application/pdf")
+
+    assert_predicate recipe, :invalid?
+    assert_predicate recipe.errors[:photo], :any?
+  end
+
+  test "rejects a photo over 10MB" do
+    recipe = recipes(:karaage)
+    recipe.photo.attach(io: StringIO.new("x" * 11.megabytes), filename: "huge.jpg", content_type: "image/jpeg")
+
+    assert_predicate recipe, :invalid?
+    assert_predicate recipe.errors[:photo], :any?
+  end
 end
