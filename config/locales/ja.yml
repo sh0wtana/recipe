@@ -80,7 +80,7 @@ ja:
       title: レシピを編集
       back: レシピへ戻る
     form:
-      choose_photo: 写真を選ぶ
+      choose_photo: 料理の写真をのせる
       remove_photo: 写真を削除
       add_ingredient: 材料を追加
       add_step: 手順を追加

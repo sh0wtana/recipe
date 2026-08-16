@@ -19,7 +19,7 @@
        data-controller="photo-preview">
     <% image_classes = "absolute inset-0 h-full w-full object-cover" %>
 
-    <label class="absolute inset-0 grid cursor-pointer place-items-center gap-1">
+    <label class="absolute inset-0 grid cursor-pointer place-items-center">
       <%# No capture attribute. It opens the camera directly and takes the
           camera roll out of the choice, which is the whole point of the field. %>
       <%= form.file_field :photo,
@@ -27,7 +27,6 @@
             class: "sr-only",
             data: { photo_preview_target: "input", action: "photo-preview#show" } %>
 
-      <span class="text-4xl">📷</span>
       <%# Doubles as the fallback readout when the browser cannot draw the pick. %>
       <span class="px-4 text-center text-sm opacity-70" data-photo-preview-target="label"><%= t(".choose_photo") %></span>
 
