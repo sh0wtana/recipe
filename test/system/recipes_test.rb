@@ -130,6 +130,17 @@ class RecipesTest < ApplicationSystemTestCase
     assert_predicate Recipe.find_by(title: "肉じゃが").photo, :attached?
   end
 
+  # Headless Chrome cannot decode HEIF, which puts it in exactly the position a
+  # desktop browser is in. The phone this app is used from previews it fine.
+  test "names the file when the browser cannot preview it" do
+    visit new_recipe_path
+
+    attach_file "recipe[photo]", file_fixture("dish.heic"), make_visible: true
+
+    assert_no_selector "[data-photo-preview-target='image']"
+    assert_text "dish.heic"
+  end
+
   test "removes the photo with the trash button" do
     @recipe.photo.attach(io: file_fixture("dish.jpg").open, filename: "dish.jpg", content_type: "image/jpeg")
 
