@@ -35,6 +35,10 @@ class Recipe < ApplicationRecord
     attachable.variant :large, resize_to_limit: [ 1200, 1200 ], format: :jpeg
   end
 
+  # An empty file field means "leave the photo alone", so deleting needs its own
+  # signal. The form's 🗑 button sets this.
+  attr_accessor :remove_photo
+
   # Rails' :all_blank plus position, which JavaScript writes on every row —
   # without it, a row the user never touched looks filled in and blocks the save.
   BLANK_ROW = ->(attrs) { attrs.all? { |key, value| key.in?(%w[position _destroy]) || value.blank? } }
@@ -65,6 +69,11 @@ class Recipe < ApplicationRecord
   # nil means the form sent no tags; [] means the user cleared them all.
   after_save :apply_tag_names, if: -> { @tag_names }
 
+  # Read before the save, because Active Storage clears attachment_changes once
+  # it has uploaded them.
+  before_save :note_photo_replacement
+  after_save :purge_photo, if: -> { remove_photo == "1" && !@photo_replaced }
+
   # Normalize before uniq so ｶﾚｰ and カレー collapse into one name.
   def tag_names=(names)
     @tag_names = Array(names)
@@ -84,5 +93,15 @@ class Recipe < ApplicationRecord
     # Assignment replaces the join rows; the Tag itself is left alone.
     def apply_tag_names
       self.tags = @tag_names.map { |name| user.tags.find_or_create_by(name: name) }
+    end
+
+    def note_photo_replacement
+      @photo_replaced = attachment_changes.key?("photo")
+    end
+
+    # purge, not purge_later: bin/dev runs no job worker, so an enqueued purge
+    # would sit in the queue and never delete the file locally.
+    def purge_photo
+      photo.purge
     end
 end

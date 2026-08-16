@@ -238,4 +238,47 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to recipes_path
   end
+
+  test "create attaches an uploaded photo" do
+    assert_difference "Recipe.count", 1 do
+      post recipes_path, params: { recipe: {
+        title: "肉じゃが",
+        photo: fixture_file_upload("dish.jpg", "image/jpeg")
+      } }
+    end
+
+    assert_predicate Recipe.order(:created_at).last.photo, :attached?
+  end
+
+  test "update with remove_photo purges the attachment" do
+    @recipe.photo.attach(io: file_fixture("dish.jpg").open, filename: "dish.jpg", content_type: "image/jpeg")
+
+    patch recipe_path(@recipe), params: { recipe: { remove_photo: "1" } }
+
+    assert_not @recipe.reload.photo.attached?
+  end
+
+  test "update without a photo param leaves the attachment alone" do
+    @recipe.photo.attach(io: file_fixture("dish.jpg").open, filename: "dish.jpg", content_type: "image/jpeg")
+
+    patch recipe_path(@recipe), params: { recipe: { title: "からあげ改" } }
+
+    assert_predicate @recipe.reload.photo, :attached?
+  end
+
+  # Both can arrive together, because the flag stays set while the user goes on
+  # to pick a replacement. An unguarded purge deletes what was just uploaded.
+  test "update keeps a new photo that arrives with remove_photo set" do
+    @recipe.photo.attach(io: file_fixture("dish.jpg").open, filename: "old.jpg", content_type: "image/jpeg")
+
+    patch recipe_path(@recipe), params: { recipe: {
+      remove_photo: "1",
+      photo: fixture_file_upload("dish.jpg", "image/jpeg")
+    } }
+
+    @recipe.reload
+
+    assert_predicate @recipe.photo, :attached?
+    assert_equal "dish.jpg", @recipe.photo.filename.to_s
+  end
 end

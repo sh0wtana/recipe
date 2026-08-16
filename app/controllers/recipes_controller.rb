@@ -62,7 +62,7 @@ class RecipesController < ApplicationController
     # The doubly nested arrays are load-bearing: flattening them drops every
     # ingredient and step without raising anything.
     def recipe_params
-      params.expect(recipe: [ :title, :description, :servings, :tips,
+      params.expect(recipe: [ :title, :description, :servings, :tips, :photo, :remove_photo,
                               tag_names: [],
                               ingredients_attributes: [ [ :id, :name, :amount, :position, :_destroy ] ],
                               steps_attributes:       [ [ :id, :body, :position, :_destroy ] ] ])
