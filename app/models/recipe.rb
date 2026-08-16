@@ -28,6 +28,13 @@ class Recipe < ApplicationRecord
   has_many :recipe_tags, dependent: :destroy
   has_many :tags, through: :recipe_tags
 
+  # format: :jpeg on both. Rails defaults a non-web-image variant to PNG, so a
+  # HEIC photo would silently become a multi-megabyte PNG that still displays.
+  has_one_attached :photo do |attachable|
+    attachable.variant :thumb, resize_to_fill: [ 192, 192 ], format: :jpeg
+    attachable.variant :large, resize_to_limit: [ 1200, 1200 ], format: :jpeg
+  end
+
   # Rails' :all_blank plus position, which JavaScript writes on every row —
   # without it, a row the user never touched looks filled in and blocks the save.
   BLANK_ROW = ->(attrs) { attrs.all? { |key, value| key.in?(%w[position _destroy]) || value.blank? } }

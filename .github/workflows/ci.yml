@@ -76,7 +76,8 @@ jobs:
     #    options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libvips
+        # libheif1 only suggests the HEVC decoder on amd64, and iPhone HEIC is HEVC.
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libvips libheif-plugin-libde265
 
       - name: Checkout code
         uses: actions/checkout@v6
@@ -104,7 +105,8 @@ jobs:
     #    options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libvips
+        # libheif1 only suggests the HEVC decoder on amd64, and iPhone HEIC is HEVC.
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libvips libheif-plugin-libde265
 
       - name: Checkout code
         uses: actions/checkout@v6
