@@ -23,6 +23,14 @@ module RecipeMemo
     #
     config.i18n.default_locale = :ja
     config.time_zone = "Tokyo"
+
+    # Serve attachments through the app instead of redirecting to a signed URL.
+    # The redirect is cached for exactly as long as the URL it points at stays
+    # valid, so reloading a page near that boundary hands the browser a URL that
+    # has already expired and the image breaks. Proxying has no expiry, and on
+    # the Disk service it also halves the requests, since the redirect target is
+    # another Rails route anyway.
+    config.active_storage.resolve_model_to_route = :rails_storage_proxy
     # config.eager_load_paths << Rails.root.join("extras")
   end
 end
