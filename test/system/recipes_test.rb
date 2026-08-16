@@ -113,6 +113,40 @@ class RecipesTest < ApplicationSystemTestCase
     assert_selector "#clear-search"
   end
 
+  test "picks a photo and saves it with the recipe" do
+    visit new_recipe_path
+
+    fill_in Recipe.human_attribute_name(:title), with: "肉じゃが"
+
+    # make_visible: the input is sr-only, and Capybara refuses to attach to an
+    # element it considers hidden.
+    attach_file "recipe[photo]", file_fixture("dish.jpg"), make_visible: true
+
+    assert_selector "[data-photo-preview-target='image'][src^='blob:']"
+
+    click_on I18n.t("helpers.submit.create")
+
+    assert_selector "h1", text: "肉じゃが"
+    assert_predicate Recipe.find_by(title: "肉じゃが").photo, :attached?
+  end
+
+  test "removes the photo with the trash button" do
+    @recipe.photo.attach(io: file_fixture("dish.jpg").open, filename: "dish.jpg", content_type: "image/jpeg")
+
+    visit edit_recipe_path(@recipe)
+
+    assert_selector "[data-photo-preview-target='image']"
+
+    find("[data-photo-preview-target='button']").click
+
+    assert_no_selector "[data-photo-preview-target='image']"
+
+    click_on I18n.t("helpers.submit.update")
+
+    assert_current_path recipe_path(@recipe)
+    assert_not @recipe.reload.photo.attached?
+  end
+
   private
     # Matching the row target, so the controller and the test agree on what a
     # row is. <template> contents are invisible to querySelectorAll.
