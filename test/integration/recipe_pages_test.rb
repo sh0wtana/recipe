@@ -192,6 +192,19 @@ class RecipePagesTest < ActionDispatch::IntegrationTest
     assert_select "img[src*=?]", "active_storage"
   end
 
+  # Redirecting caches the redirect for exactly as long as the URL it points at
+  # lives, so a reload near that boundary follows a cached redirect to a URL
+  # that has already expired and the image breaks. Proxying has no expiry.
+  test "photos are served through the proxy rather than a redirect" do
+    attach_photo_to @recipe
+
+    get recipes_path
+    assert_select "img[src*=?]", "representations/proxy"
+
+    get recipe_path(@recipe)
+    assert_select "img[src*=?]", "representations/proxy"
+  end
+
   test "index shows a placeholder for a recipe without a photo" do
     get recipes_path
 
