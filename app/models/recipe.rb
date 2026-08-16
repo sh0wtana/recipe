@@ -47,6 +47,12 @@ class Recipe < ApplicationRecord
   validates :servings, length: { maximum: 25 }
   validates :tips, length: { maximum: 120 }
 
+  # MIME strings rather than the gem's symbol shorthand. The symbols resolve
+  # through Marcel's extension table, and HEIC's entry there is not worth
+  # depending on.
+  validates :photo, content_type: %w[ image/jpeg image/png image/webp image/heic image/heif ],
+                    size: { less_than: 10.megabytes }
+
   # A column left out here is unreachable through search, not just unlisted.
   def self.ransackable_attributes(_auth_object = nil) = %w[title]
   def self.ransackable_associations(_auth_object = nil) = %w[tags ingredients]

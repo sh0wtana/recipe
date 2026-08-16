@@ -48,6 +48,10 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
+# Validate attachment type and size [https://github.com/igorkasyanchuk/active_storage_validations]
+# Its bundled ja locale is why this beats a hand-written validation here.
+gem "active_storage_validations"
+
 gem "rails-i18n"
 
 group :development, :test do
