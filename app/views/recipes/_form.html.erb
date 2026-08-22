@@ -19,11 +19,7 @@
        data-controller="photo-preview">
     <% image_classes = "absolute inset-0 h-full w-full object-cover" %>
 
-    <%# A photo picked into a save that then failed validation is attached but
-        unsaved, and an unsaved blob has no id to sign a URL with. Asking for one
-        raises, which turned a blank title into a 500. There is nothing to draw
-        either way — the browser has already dropped the pick. %>
-    <% photo_to_show = recipe.photo.attached? && recipe.photo.blob.persisted? %>
+    <% show_photo = recipe.photo.attached? && recipe.photo.blob.persisted? %>
 
     <label class="absolute inset-0 grid cursor-pointer place-items-center">
       <%# No capture attribute. It opens the camera directly and takes the
@@ -38,7 +34,7 @@
 
       <%# alt is empty on purpose. The title field sits right below, and the
           picture carries nothing a screen reader can use. %>
-      <% if photo_to_show %>
+      <% if show_photo %>
         <%= image_tag recipe.photo.variant(:large), alt: "", class: image_classes,
               data: { photo_preview_target: "image", action: "error->photo-preview#failed" } %>
       <% else %>
@@ -50,7 +46,7 @@
     <%= form.hidden_field :remove_photo, value: "", data: { photo_preview_target: "flag" } %>
 
     <button type="button"
-            class="btn btn-circle btn-sm absolute right-2 top-2 z-10 <%= "hidden" unless photo_to_show %>"
+            class="btn btn-circle btn-sm absolute right-2 top-2 z-10 <%= "hidden" unless show_photo %>"
             aria-label="<%= t(".remove_photo") %>"
             data-photo-preview-target="button"
             data-action="photo-preview#remove">🗑</button>
