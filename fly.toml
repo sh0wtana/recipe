@@ -1,0 +1,46 @@
+app = "my-recipe-memo"
+primary_region = "nrt"
+
+# Rails 8 with Puma idles at 200-250MB on 512MB. Swap turns a would-be OOM kill
+# during libvips variant generation into a slowdown. It also rules out
+# auto_stop_machines = "suspend", which requires a machine with no swap.
+swap_size_mb = 512
+
+[build]
+
+[env]
+  # Run the Solid Queue supervisor inside Puma. A separate process group would
+  # need a second machine, and the only jobs here are Active Storage analysis
+  # and purging.
+  SOLID_QUEUE_IN_PUMA = "true"
+
+[http_service]
+  # Thruster listens on 80 and proxies to Puma on 3000.
+  internal_port = 80
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  # "memory", not "memory_mb". The latter is not a valid key and is ignored
+  # without warning, which would silently boot the machine at the default size.
+  memory = "512mb"
+
+[mounts]
+  # The SQLite databases and the Active Storage files both live here, so one
+  # snapshot restores the recipes and their photos at the same instant.
+  source = "storage"
+  destination = "/rails/storage"
+  # Photos dominate the space: 10MB is allowed per photo, plus two variants.
+  # A volume can be extended later but never shrunk.
+  initial_size = "3gb"
+  # Snapshots are the only safety net here. The default 5 days does not cover
+  # noticing weeks later that a recipe was deleted.
+  snapshot_retention = 30
+
+[deploy]
+  # A volume attaches to one machine at a time, so a rolling deploy cannot work.
+  strategy = "immediate"
