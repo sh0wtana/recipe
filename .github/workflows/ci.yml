@@ -130,3 +130,19 @@ jobs:
           name: screenshots
           path: ${{ github.workspace }}/tmp/screenshots
           if-no-files-found: ignore
+
+  deploy:
+    needs: [ scan_ruby, scan_js, lint, test, system-test ]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@v1
+
+      - name: Deploy to Fly.io
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
