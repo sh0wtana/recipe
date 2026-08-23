@@ -135,6 +135,11 @@ jobs:
     needs: [ scan_ruby, scan_js, lint, test, system-test ]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    # fly.toml runs a single machine with an attached volume and strategy =
+    # "immediate", so two deploys racing for it can leave it inconsistent.
+    concurrency:
+      group: fly-deploy-production
+      cancel-in-progress: false
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
