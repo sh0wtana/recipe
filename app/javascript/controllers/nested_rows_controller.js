@@ -50,9 +50,8 @@ export default class extends Controller {
       .forEach((row, index) => { row.querySelector("[data-position]").value = index })
   }
 
-  // Deleted rows are hidden rather than detached, because a detached row
-  // submits no _destroy and the record survives the save. They are still in
-  // rowTargets, and nothing about the running order may count them.
+  // A removed row is only hidden, so it stays in rowTargets. Nothing about
+  // the running order may count it.
   visibleRows() {
     return this.rowTargets.filter((row) => !row.hidden)
   }

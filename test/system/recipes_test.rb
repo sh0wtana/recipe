@@ -195,8 +195,6 @@ class RecipesTest < ApplicationSystemTestCase
     def ingredient_row = "#ingredient-fields [data-nested-rows-target='row']"
     def step_row       = "#step-fields [data-nested-rows-target='row']"
 
-    # The nested fields have no labels yet (#15), so rows are addressed by the
-    # suffix of the name attribute Rails generates.
     # Capybara's drag_to jumps straight from the handle to the target, and
     # SortableJS never sees a drag in that. The nudges either side of the move
     # are what start it and settle it. Their direction does not matter.
@@ -210,6 +208,8 @@ class RecipesTest < ApplicationSystemTestCase
         .perform
     end
 
+    # The nested fields have no labels yet (#15), so rows are addressed by the
+    # suffix of the name attribute Rails generates.
     def ingredient_row_named(name)
       all(ingredient_row).find { |row| row.find("input[name$='[name]']").value == name } ||
         raise("no ingredient row named #{name.inspect}")
