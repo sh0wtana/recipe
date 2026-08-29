@@ -102,7 +102,7 @@ class RecipePagesTest < ActionDispatch::IntegrationTest
   # The Stimulus controller finds these by attribute, one of each per row.
   # Scoped to the list because the fieldset also holds a <template> of the same
   # partial, and assert_select counts its fields even though a browser wouldn't.
-  test "edit renders the row hooks and a remove button for each ingredient" do
+  test "edit renders the row hooks, a drag handle and a remove button for each ingredient" do
     get edit_recipe_path(@recipe)
 
     list = "#ingredient-fields [data-nested-rows-target=list]"
@@ -110,13 +110,14 @@ class RecipePagesTest < ActionDispatch::IntegrationTest
     assert_select "#{list} input[type=hidden][data-position]", count: 3
     assert_select "#{list} input[type=hidden][data-destroy]", count: 3
 
-    # 🗑 is a glyph, so its aria-label is the only text a reader or a test can
-    # address it by.
+    # Sortable finds the handle by this attribute, and 🗑 is a glyph, so its
+    # aria-label is the only text a reader or a test can address it by.
+    assert_select "#{list} [data-handle]", count: 3
     assert_select "#{list} button[data-action='nested-rows#remove'][aria-label=?]",
       I18n.t("recipes.ingredient_fields.remove"), count: 3
   end
 
-  test "edit renders the row hooks and a remove button for each step" do
+  test "edit renders the row hooks, a drag handle and a remove button for each step" do
     get edit_recipe_path(@recipe)
 
     list = "#step-fields [data-nested-rows-target=list]"
@@ -124,8 +125,9 @@ class RecipePagesTest < ActionDispatch::IntegrationTest
     assert_select "#{list} input[type=hidden][data-position]", count: 2
     assert_select "#{list} input[type=hidden][data-destroy]", count: 2
 
-    # 🗑 is a glyph, so its aria-label is the only text a reader or a test can
-    # address it by.
+    # Sortable finds the handle by this attribute, and 🗑 is a glyph, so its
+    # aria-label is the only text a reader or a test can address it by.
+    assert_select "#{list} [data-handle]", count: 2
     assert_select "#{list} button[data-action='nested-rows#remove'][aria-label=?]",
       I18n.t("recipes.step_fields.remove"), count: 2
   end
