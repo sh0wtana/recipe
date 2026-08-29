@@ -109,8 +109,11 @@ class RecipePagesTest < ActionDispatch::IntegrationTest
     assert_select "#{list} [data-nested-rows-target=row]", count: 3
     assert_select "#{list} input[type=hidden][data-position]", count: 3
     assert_select "#{list} input[type=hidden][data-destroy]", count: 3
-    assert_select "#{list} button[type=button]", count: 3,
-      text: I18n.t("recipes.ingredient_fields.remove")
+
+    # 🗑 is a glyph, so its aria-label is the only text a reader or a test can
+    # address it by.
+    assert_select "#{list} button[data-action='nested-rows#remove'][aria-label=?]",
+      I18n.t("recipes.ingredient_fields.remove"), count: 3
   end
 
   test "edit renders the row hooks and a remove button for each step" do
@@ -120,8 +123,11 @@ class RecipePagesTest < ActionDispatch::IntegrationTest
     assert_select "#{list} [data-nested-rows-target=row]", count: 2
     assert_select "#{list} input[type=hidden][data-position]", count: 2
     assert_select "#{list} input[type=hidden][data-destroy]", count: 2
-    assert_select "#{list} button[type=button]", count: 2,
-      text: I18n.t("recipes.step_fields.remove")
+
+    # 🗑 is a glyph, so its aria-label is the only text a reader or a test can
+    # address it by.
+    assert_select "#{list} button[data-action='nested-rows#remove'][aria-label=?]",
+      I18n.t("recipes.step_fields.remove"), count: 2
   end
 
   test "edit offers a checkbox for every tag the user owns, ticked for this recipe's" do

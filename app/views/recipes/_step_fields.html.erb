@@ -7,5 +7,9 @@
   </div>
   <%= form.hidden_field :position, data: { position: "" } %>
   <%= form.hidden_field :_destroy, data: { destroy: "" } %>
-  <button type="button" data-action="nested-rows#remove" class="btn btn-ghost btn-sm mt-1 shrink-0 text-error"><%= t(".remove") %></button>
+  <%# Icon, not text: the row now carries three buttons, and 「手順を削除」 spent
+      the width the ▲▼ pair needs. Matches the photo tile's 🗑. %>
+  <button type="button" data-action="nested-rows#remove"
+          aria-label="<%= t(".remove") %>"
+          class="btn btn-ghost btn-sm btn-square mt-1 shrink-0 text-error">🗑</button>
 </div>

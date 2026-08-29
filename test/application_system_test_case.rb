@@ -19,6 +19,11 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # test per run, always a different one, always on the redirect after sign-in.
   Capybara.default_max_wait_time = 5
 
+  # The row buttons are single glyphs, so their aria-label is the only text
+  # click_on can match. Off by default, and without it every one of them is
+  # invisible to the suite.
+  Capybara.enable_aria_label = true
+
   # A real browser never sees a cookie stuffed into the test process, so this
   # signs in for real. Matching by placeholder: that view has no labels.
   def sign_in_as(user, password: "password")
