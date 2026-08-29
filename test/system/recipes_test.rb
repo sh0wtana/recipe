@@ -63,6 +63,37 @@ class RecipesTest < ApplicationSystemTestCase
     assert_selector ingredient_row, count: 2
   end
 
+  test "dragging a row by its handle saves the new order" do
+    visit edit_recipe_path(@recipe)
+
+    drag_row ingredient_row_named("しょうが"), onto: ingredient_row_named("鶏もも肉")
+    drag_row all(step_row).first, onto: all(step_row).last
+
+    click_on I18n.t("helpers.submit.update")
+
+    assert_selector "h1", text: @recipe.title
+
+    assert_equal [ "しょうが", "鶏もも肉 300g", "醤油 大さじ2" ],
+      all("#ingredients li").map { |li| li.text.squish }
+    assert_equal [ "170℃の油で4分ほど揚げる", "鶏肉を一口大に切り、調味料に30分漬ける" ],
+      all("#steps li").map(&:text)
+  end
+
+  # A deleted row is only hidden, so Sortable still has it in the list. It is
+  # renumber() that has to keep skipping it, or the saved positions get a gap.
+  test "dragging after a delete still numbers the rows from zero" do
+    visit edit_recipe_path(@recipe)
+
+    ingredient_row_named("醤油").click_on I18n.t("recipes.ingredient_fields.remove")
+    drag_row ingredient_row_named("しょうが"), onto: ingredient_row_named("鶏もも肉")
+
+    click_on I18n.t("helpers.submit.update")
+
+    assert_selector "h1", text: @recipe.title
+    assert_equal %w[しょうが 鶏もも肉], @recipe.reload.ingredients.map(&:name)
+    assert_equal [ 0, 1 ], @recipe.reload.ingredients.map(&:position)
+  end
+
   test "Enter in the title does not save and leave the editor" do
     visit new_recipe_path
 
@@ -166,6 +197,19 @@ class RecipesTest < ApplicationSystemTestCase
 
     # The nested fields have no labels yet (#15), so rows are addressed by the
     # suffix of the name attribute Rails generates.
+    # Capybara's drag_to jumps straight from the handle to the target, and
+    # SortableJS never sees a drag in that. The nudges either side of the move
+    # are what start it and settle it. Their direction does not matter.
+    def drag_row(row, onto:)
+      page.driver.browser.action
+        .click_and_hold(row.find("[data-handle]").native)
+        .move_by(0, -8)
+        .move_to(onto.native)
+        .move_by(0, -8)
+        .release
+        .perform
+    end
+
     def ingredient_row_named(name)
       all(ingredient_row).find { |row| row.find("input[name$='[name]']").value == name } ||
         raise("no ingredient row named #{name.inspect}")

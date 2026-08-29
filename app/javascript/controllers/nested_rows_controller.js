@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import Sortable from "sortablejs"
 
 // One instance per fieldset, so ingredients and steps renumber independently.
 export default class extends Controller {
@@ -10,6 +11,20 @@ export default class extends Controller {
   connect() {
     this.rowTargets.forEach((row) => { row.hidden = this.destroyed(row) })
     this.renumber()
+
+    // forceFallback: Chrome's native drag and drop cannot be driven by
+    // WebDriver, so the default path leaves reordering with no system test at
+    // all. The fallback uses pointer events, which is also what touch gets.
+    this.sortable = Sortable.create(this.listTarget, {
+      handle: "[data-handle]",
+      animation: 150,
+      forceFallback: true,
+      onEnd: () => this.renumber()
+    })
+  }
+
+  disconnect() {
+    this.sortable.destroy()
   }
 
   add() {
@@ -31,9 +46,15 @@ export default class extends Controller {
   }
 
   renumber() {
-    this.rowTargets
-      .filter((row) => !row.hidden)
+    this.visibleRows()
       .forEach((row, index) => { row.querySelector("[data-position]").value = index })
+  }
+
+  // Deleted rows are hidden rather than detached, because a detached row
+  // submits no _destroy and the record survives the save. They are still in
+  // rowTargets, and nothing about the running order may count them.
+  visibleRows() {
+    return this.rowTargets.filter((row) => !row.hidden)
   }
 
   // Rails renders an unflagged row as the string "false", and Boolean("false")
