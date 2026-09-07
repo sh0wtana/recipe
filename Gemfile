@@ -46,7 +46,7 @@ gem "kamal", require: false
 gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-gem "image_processing", "~> 2.0"
+gem "image_processing", "~> 2.1"
 # image_processing 2.0 made the backends soft dependencies, and Rails defaults
 # the variant processor to vips. 2.2.1 is where Vips.block_untrusted arrived,
 # and Active Storage raises at boot without it. require: false because Active
